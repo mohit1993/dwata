@@ -90,3 +90,6 @@ ENV/
 
 # node modules
 frontend/node_modules
+
+backend/.idea/
+.idea/
