@@ -17,7 +17,7 @@ def assets_handler(req, resp):
     # The path inside the project directory structure is slightly different from the one in asset URL requests
     path = os.path.abspath(os.path.join(
         settings.ROOT_PATH, '..', *req.path.replace('asset', 'static').split('/')))
-    print(path)
+
     # We check if the path exists
     if os.path.exists(path):
         mime = mimetypes.guess_type(path)
