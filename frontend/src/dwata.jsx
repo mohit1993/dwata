@@ -1,15 +1,14 @@
 import React from 'react'
-import Immutable from 'immutable'
 
 import Sidebar from './views/sidebar.jsx'
 
 
-export default class Dwata extends React.createClass {
+export default class Dwata extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = Immutable.Map({
-  		sources: Immutable.List()
-  	})
+		this.state = {
+  		sources: []
+  	}
 	}
 
   render() {

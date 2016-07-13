@@ -2,23 +2,22 @@ import React from 'react'
 
 
 const SidebarMenuIteam = (props) => {
-	return (<li class="pure-menu-item">
-		<a href="#" class="pure-menu-link">
-			{props.label} { props.meta ? <span class="sources-count">({props.meta})</span> : null }
+	return (<li className="pure-menu-item">
+		<a href="#" className="pure-menu-link">
+			{props.label} { props.meta ? <span className="sources-count">({props.meta})</span> : null }
 		</a>
 	</li>)
 }
 
 
-export default (props) => {
-	return (<div class="pure-u">
-    <a href="#" class="nav-menu-button">Menu</a>
-    <div class="nav-inner">
-      <div class="pure-menu">
-        <ul class="pure-menu-list">
-          <SidebarMenuIteam label="Sources" meta="2" />
+export default (props) => <div className="pure-u">
+    <div className="nav-inner">
+      <div className="pure-menu">
+        <ul className="pure-menu-list">
+          <SidebarMenuIteam label="Sources" meta={props.sources.length} />
+          <SidebarMenuIteam label="Admin" />
+          <SidebarMenuIteam label="Logout" />
         </ul>
       </div>
     </div>
-  </div>)
-}
+  </div>
