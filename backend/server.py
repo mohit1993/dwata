@@ -5,6 +5,7 @@ import settings
 from handlers.static import HomepageHandler, assets_handler
 from handlers.source import SourceHandler
 from handlers.schema import SchemaHandler
+from handlers.read import ReadHandler
 
 
 api = falcon.API()
@@ -14,6 +15,7 @@ api.add_sink(assets_handler, prefix=r'/asset/')
 api.add_route('/api/source/', SourceHandler())
 
 api.add_route('/api/schema/{source}/', SchemaHandler())
+api.add_route('/api/table/data/{source}/{table}/', ReadHandler())
 # api.add_route('/schema/alter/', )
 #
 # api.add_route('/op/select/', )

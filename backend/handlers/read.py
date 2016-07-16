@@ -1,12 +1,13 @@
 import os
 import json
-from sqlalchemy import create_engine, MetaData
+import datetime
+from sqlalchemy import create_engine, MetaData, select
 
 import settings
 
 
-class SchemaHandler(object):
-    def on_get(self, request, response, source):
+class ReadHandler(object):
+    def on_get(self, request, response, source, table):
         path_to_config = os.path.join(settings.ROOT_PATH, '..', 'config.json')
         if not os.path.exists(path=path_to_config):
             print("The configuration file config.json must exist at the root of the project")
@@ -28,8 +29,13 @@ class SchemaHandler(object):
                 conn = engine.connect()
                 meta = MetaData(bind=engine)
                 meta.reflect()
-                tables = dict((name, dict((col, type(col_def.type).__name__) for col, col_def in schema.columns.items()))
-                              for name, schema in meta.tables.items())
-                response.body = json.dumps(tables)
-                response.set_header('Content-type', 'application/javascript')
+                if table in meta.tables:
+                    tt = meta.tables[table]
+                    response.body = json.dumps(
+                        list(dict(x) for x in conn.execute(select([tt])).fetchall()),
+                        default=lambda obj: obj.isoformat()
+                        if (isinstance(obj, datetime.datetime) or
+                            isinstance(obj, datetime.date)) else None
+                    )
+                    response.set_header('Content-type', 'application/javascript')
                 conn.close()
