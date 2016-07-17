@@ -1,17 +1,18 @@
 import React from 'react'
 
-import Sidebar from './views/sidebar.jsx'
+import Navbar from './views/navbar.jsx'
+import Grid from './views/grid.jsx'
 
 
 export default class Dwata extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-  		sources: [],
-  		current_source: null,
-  		schema: {},
-  		current_table: null,
-  		table_data: []
+  		sources: null,
+  		currentSource: null,
+  		schema: null,
+  		currentTable: null,
+  		records: null
   	}
   	this.fetchSources = this.fetchSources.bind(this);
   	this.fetchSchema = this.fetchSchema.bind(this);
@@ -30,30 +31,30 @@ export default class Dwata extends React.Component {
 		xhr.send();
 	}
 
-	fetchSchema(source_id) {
+	fetchSchema(sourceId) {
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "/api/schema/" + source_id + "/");
+		xhr.open("GET", "/api/schema/" + sourceId + "/");
 		xhr.responseType = "json"
 		xhr.onreadystatechange = (() => {
 			if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
 				this.setState({
 					schema: xhr.response,
-					current_source: source_id
+					currentSource: sourceId
 				});
 			}
 		}).bind(this);
 		xhr.send();
 	}
 
-	fetchData(table_id) {
+	fetchData(tableId) {
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "/api/table/data/" + this.state.current_source + "/" + table_id + "/");
+		xhr.open("GET", "/api/table/data/" + this.state.currentSource + "/" + tableId + "/");
 		xhr.responseType = "json"
 		xhr.onreadystatechange = (() => {
 			if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
 				this.setState({
-					table_data: xhr.response,
-					current_table: table_id
+					records: xhr.response,
+					currentTable: tableId
 				});
 			}
 		}).bind(this);
@@ -61,18 +62,20 @@ export default class Dwata extends React.Component {
 	}
 
   render() {
-  	return (
-  		<div id="layout" className="content pure-g">
-  			<Sidebar
-  				sources={this.state.sources}
-  				current_source={this.state.current_source}
-  				fetchSources={this.fetchSources}
-  				schema={this.state.schema}
-  				current_table={this.state.current_table}
-  				fetchSchema={this.fetchSchema}
-  				fetchData={this.fetchData} />
-  		</div>
-  	)
+  	return (<div>
+  		<Navbar
+				sources={this.state.sources}
+				currentSource={this.state.currentSource}
+				fetchSources={this.fetchSources}
+				schema={this.state.schema}
+				currentTable={this.state.currentTable}
+				fetchSchema={this.fetchSchema}
+				fetchData={this.fetchData} />
+  		<Grid
+				schema={this.state.schema}
+				currentTable={this.state.currentTable}
+				records={this.state.records} />
+  	</div>)
   }
 }
 
