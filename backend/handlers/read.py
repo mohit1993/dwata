@@ -17,9 +17,11 @@ class ReadHandler(object):
             meta.reflect()
             if table in meta.tables:
                 tt = meta.tables[table]
-                response.body = json.dumps(
-                    list(dict(x) for x in conn.execute(select([tt])).fetchall()),
-                    default=lambda obj: obj.isoformat()
+                exc = conn.execute(select([tt]))
+                response.body = json.dumps(dict(
+                        keys=exc.keys(),
+                        results=exc.cursor.fetchall()
+                    ), default=lambda obj: obj.isoformat()
                     if (isinstance(obj, datetime.datetime) or
                         isinstance(obj, datetime.date)) else None
                 )

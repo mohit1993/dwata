@@ -12,7 +12,7 @@ export default class Dwata extends React.Component {
   		currentSource: null,
   		schema: null,
   		currentTable: null,
-  		records: null
+  		queryResult: null
   	}
   	this.fetchSources = this.fetchSources.bind(this);
   	this.fetchSchema = this.fetchSchema.bind(this);
@@ -53,7 +53,7 @@ export default class Dwata extends React.Component {
 		xhr.onreadystatechange = (() => {
 			if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
 				this.setState({
-					records: xhr.response,
+					queryResult: xhr.response,
 					currentTable: tableId
 				});
 			}
@@ -74,7 +74,7 @@ export default class Dwata extends React.Component {
   		<Grid
 				schema={this.state.schema}
 				currentTable={this.state.currentTable}
-				records={this.state.records} />
+				queryResult={this.state.queryResult} />
   	</div>)
   }
 }

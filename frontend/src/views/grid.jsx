@@ -2,7 +2,7 @@ import React from 'react'
 
 
 const GridHead = (props) => <thead><tr>
-		{ props.headings.map((head, i) => <th key={i}>{head.name}</th>) }
+		{ props.headings.map((head, i) => <th key={i}>{head}</th>) }
 	</tr></thead>
 
 
@@ -15,24 +15,23 @@ const GridRow = (props) => {
 		}
 	}
 	return (<tr>
-		{ Object.keys(row).map((col) => col[0] != "_" ? <td key={col}>{row[col]}</td> : null)
-		}
+		{ Object.keys(row).map((col) => col[0] != "_" ? <td key={col}>{row[col]}</td> : null) }
 	</tr>)
 }
 
 const GridBody = (props) => <tbody>
-		{ props.records.map((row) => <GridRow row={row} key={row.id} />) }
+		{ props.records.map((row, i) => <GridRow row={row} key={i} />) }
 	</tbody>
 
 
 export default (props) => {
 	var headings = [];
-	if (props.schema && props.currentTable) {
-		headings = props.schema[props.currentTable];
+	if (props.queryResult) {
+		headings = props.queryResult.keys;
 	}
 
 	return (<table className="pure-table pure-table-horizontal pure-table-striped" style={{width: "100%"}}>
 			<GridHead headings={headings} />
-			{ props.records ? <GridBody records={props.records} /> : null }
+			{ props.queryResult ? <GridBody records={props.queryResult.results} /> : null }
 		</table>)
 }
