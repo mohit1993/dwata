@@ -12,11 +12,13 @@ export default class Dwata extends React.Component {
   		currentSource: null,
   		schema: null,
   		currentTable: null,
-  		queryResult: null
+  		queryResult: null,
+  		columnOrder: null
   	}
   	this.fetchSources = this.fetchSources.bind(this);
   	this.fetchSchema = this.fetchSchema.bind(this);
   	this.fetchData = this.fetchData.bind(this);
+  	this.changeColumnOrder = this.changeColumnOrder.bind(this);
 	}
 
 	fetchSources() {
@@ -46,19 +48,41 @@ export default class Dwata extends React.Component {
 		xhr.send();
 	}
 
-	fetchData(tableId) {
+	fetchData(tableId, columnOrder = null) {
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "/api/table/data/" + this.state.currentSource + "/" + tableId + "/");
+		columnOrder = columnOrder || this.state.columnOrder;
+		var urlParams = []
+		if (columnOrder) {
+			for (var x in columnOrder) {
+				urlParams.push('order_by=' + x + ':' + columnOrder[x]);
+			}
+		}
+		xhr.open("GET", "/api/table/data/" + this.state.currentSource + "/" + tableId + "/?" + urlParams.join('&'));
 		xhr.responseType = "json"
 		xhr.onreadystatechange = (() => {
 			if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
 				this.setState({
 					queryResult: xhr.response,
-					currentTable: tableId
+					currentTable: tableId,
+					columnOrder: columnOrder
 				});
 			}
 		}).bind(this);
 		xhr.send();
+	}
+
+	changeColumnOrder(column, order) {
+		var columnOrder = this.state.columnOrder || {};
+		if (column in columnOrder) {
+			if (columnOrder[column] == 'asc') {
+				columnOrder[column] = 'desc'
+			} else {
+				delete columnOrder[column]
+			}
+		} else {
+			columnOrder[column] = 'asc'
+		}
+		this.fetchData(this.state.currentTable, columnOrder);
 	}
 
   render() {
@@ -74,7 +98,9 @@ export default class Dwata extends React.Component {
   		<Grid
 				schema={this.state.schema}
 				currentTable={this.state.currentTable}
-				queryResult={this.state.queryResult} />
+				queryResult={this.state.queryResult}
+				ordering={this.state.columnOrder}
+				changeColumnOrder={this.changeColumnOrder} />
   	</div>)
   }
 }

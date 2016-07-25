@@ -4,7 +4,8 @@ import React from 'react'
 const GridHead = (props) => <thead><tr>
 		{ props.headings.map((head, i) => <th
 				key={i}
-				onClick={ (e) => { e.preventDefault(); props.handleHeadClick(head); } }>
+				onClick={ (e) => { e.preventDefault(); props.handleHeadClick(head); } }
+				style={{cursor: "pointer"}}>
 				{head} { props.ordering && head in props.ordering ? <i className={"fa fa-sort-" + props.ordering[head]} aria-hidden="true"></i> : null }</th>) }
 	</tr></thead>
 
@@ -31,30 +32,10 @@ export default class Grid extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			ordering: null,
 			schema: null,
 			currentTable: null,
 			queryResult: props.queryResult
 		}
-
-		this.handleHeadClick = this.handleHeadClick.bind(this);
-	}
-
-	handleHeadClick(head) {
-		var ordering = {}
-		if (this.state.ordering) {
-			ordering = this.state.ordering;
-		}
-		if (head in ordering) {
-			if (ordering[head] == 'asc') {
-				ordering[head] = 'desc'
-			} else {
-				delete ordering[head]
-			}
-		} else {
-			ordering[head] = 'asc'
-		}
-		this.setState({ordering: ordering})
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -73,7 +54,7 @@ export default class Grid extends React.Component {
 		}
 
 		return (<table className="pure-table pure-table-horizontal pure-table-striped" style={{width: "100%"}}>
-				<GridHead headings={headings} handleHeadClick={this.handleHeadClick} ordering={this.state.ordering} />
+				<GridHead headings={headings} handleHeadClick={this.props.changeColumnOrder} ordering={this.props.columnOrder} />
 				{ this.state.queryResult ? <GridBody records={this.state.queryResult.results} /> : null }
 			</table>)
 	}
