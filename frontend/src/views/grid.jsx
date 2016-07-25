@@ -34,7 +34,8 @@ export default class Grid extends React.Component {
 		this.state = {
 			schema: null,
 			currentTable: null,
-			queryResult: props.queryResult
+			queryResult: props.queryResult,
+			ordering: null
 		}
 	}
 
@@ -43,7 +44,8 @@ export default class Grid extends React.Component {
 		this.setState({
 			schema: nextProps.schema,
 			currentTable: nextProps.currentTable,
-			queryResult: nextProps.queryResult
+			queryResult: nextProps.queryResult,
+			ordering: nextProps.ordering
 		})
 	}
 
@@ -54,7 +56,7 @@ export default class Grid extends React.Component {
 		}
 
 		return (<table className="pure-table pure-table-horizontal pure-table-striped" style={{width: "100%"}}>
-				<GridHead headings={headings} handleHeadClick={this.props.changeColumnOrder} ordering={this.props.columnOrder} />
+				<GridHead headings={headings} handleHeadClick={this.props.changeColumnOrder} ordering={this.state.ordering} />
 				{ this.state.queryResult ? <GridBody records={this.state.queryResult.results} /> : null }
 			</table>)
 	}
