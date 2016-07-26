@@ -9,6 +9,8 @@ class SourceHandler(object):
     def on_get(request, response):
         config = dict()
         databases = extract_config()
+        if not databases:
+            return False
 
         for _id, x in databases.items():
             url = urlparse(x)

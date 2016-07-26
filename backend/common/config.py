@@ -12,7 +12,7 @@ def extract_config():
 
     with open(path_to_config) as config_file:
         config_contents = config_file.read()
-        databases = dict()
+        databases = None
 
         # Let us try to parse the file as JSON, and handle possible failure
         try:
@@ -28,4 +28,4 @@ def extract_config():
             print("*databases* setting in config.json should be a JSON Object, "
                   "please check your configuration syntax")
 
-        return databases
+        return databases if databases else False

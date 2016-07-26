@@ -19,7 +19,8 @@ class ReadHandler(object):
             if table in meta.tables:
                 tt = meta.tables[table]
                 sel = dict(
-                    columns=[tt]
+                    columns=[tt],
+                    limit=1000
                 )
                 if 'order_by' in request.params:
                     order_by = request.params['order_by']
