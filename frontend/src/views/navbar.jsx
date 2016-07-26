@@ -1,8 +1,8 @@
 import React from 'react'
 
 
-const NavbarMenuItemSub = (props) => <li className="pure-menu-item">
-		<a href="#" className="pure-menu-link"
+const NavbarMenuItemSub = (props) => <li className="menu-item">
+		<a href="#" className="menu-link"
 			onClick={ props.clickHandler ? (e) => { e.preventDefault(); props.clickHandler(props.id) } : null }>
 			{props.label} { props.meta ? <span className="meta">({props.meta})</span> : null }
 		</a>
@@ -12,13 +12,13 @@ const NavbarMenuItemSub = (props) => <li className="pure-menu-item">
 const NavbarMenuItem = (props) => {
 	var subMenu = null;
 	if (props.subMenuItems) {
-		subMenu = <ul className="pure-menu-children">
+		subMenu = <ul className="menu-child">
 			{ props.subMenuItems.map((item, i) => <NavbarMenuItemSub key={item.id} id={item.id}
 				label={item.label} clickHandler={props.subClickHandler} />) }
 		</ul>
 	}
 
-	return (<li className={subMenu ? "pure-menu-item pure-menu-has-children pure-menu-allow-hover" : "pure-menu-item"}>
+	return (<li className={subMenu ? "menu-item has-children" : "pure-menu-item"}>
 		<a href="#" className="pure-menu-link"
 			onClick={ props.clickHandler ? (e) => { e.preventDefault(); props.clickHandler() } : null }>
 			{props.label} { props.meta ? <span className="meta">({props.meta})</span> : null }
@@ -72,7 +72,7 @@ export default (props) => {
 	navbarItems.push(<NavbarMenuItem label="Admin" key="adm" />);
   navbarItems.push(<NavbarMenuItem label="Logout" key="lot" />);
 
-	return (<div className="pure-menu pure-menu-horizontal">
-    <ul className="pure-menu-list">{navbarItems}</ul>
+	return (<div id="top-menu">
+    <ul className="menu-list">{navbarItems}</ul>
   </div>)
 }

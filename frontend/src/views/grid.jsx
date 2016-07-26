@@ -55,7 +55,7 @@ export default class Grid extends React.Component {
 			headings = this.state.queryResult.keys;
 		}
 
-		return (<table className="pure-table pure-table-horizontal pure-table-striped" style={{width: "100%"}}>
+		return (<table className="data table-striped" style={{width: "100%"}}>
 				<GridHead headings={headings} handleHeadClick={this.props.changeColumnOrder} ordering={this.state.ordering} />
 				{ this.state.queryResult ? <GridBody records={this.state.queryResult.results} /> : null }
 			</table>)

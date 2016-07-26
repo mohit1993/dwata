@@ -1,0 +1,92 @@
+$primary-text-color: #454545
+$navbar-border-color: #efefef
+$grid-border-color: #dedede
+
+body
+	font-family: 'Raleway', sans-serif
+	font-size: 14px
+	color: $primary-text-color
+	background: #fff
+	margin: 0
+	padding: 0
+
+a
+	text-decoration: none
+	color: #165eb9
+
+
+#top-menu
+	width: 100%
+	height: 32px
+	border-bottom: 1px solid $navbar-border-color
+	position: relative
+
+	ul.menu-list
+		list-style: none
+		margin: 0
+		padding: 0
+		width: 100%
+		position: relative
+
+		li
+			float: left
+			display: inline-block
+			width: auto
+
+			a
+				display: block
+				color: #333
+				line-height: 32px
+				font-family: 'Raleway', sans-serif
+				font-weight: 600
+				padding: 0 16px
+
+				&:hover
+					background-color: #4CAF50
+					color: #fff
+
+	ul.menu-child
+		position: absolute
+		list-style: none
+		z-index: 2
+		border: 1px solid $navbar-border-color
+		margin: 0
+		padding: 0
+		min-width: 160px
+		background: #fff
+
+		li
+			a
+				font-family: 'Lato', sans-serif
+				font-weight: 400
+				font-size: 14px
+
+
+table.data
+	border-collapse: collapse
+	width: 100%
+
+	thead
+		tr
+			border-top: 1px solid $grid-border-color
+			border-bottom: 1px solid $grid-border-color
+
+		th
+			font-family: 'Raleway', sans-serif
+			font-weight: 600
+			text-align: left
+			line-height: 28px
+			border-right: 1px solid $grid-border-color
+			background-color: #efefef
+
+	tbody
+		tr
+			line-height: 18px
+			border-bottom: 1px solid $grid-border-color
+			font-family: 'Lato', sans-serif
+
+			td
+				border-right: 1px solid $grid-border-color
+
+				&:last-child
+					border-right: 0
