@@ -30,7 +30,8 @@ const GridBody = (props) => <tbody>
 
 export default class Grid extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
+
 		this.state = {
 			schema: null,
 			currentTable: null,

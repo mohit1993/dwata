@@ -94,3 +94,5 @@ frontend/node_modules
 .idea/
 config.json
 /static/javascript/
+/static/stylesheet/
+.sass-cache/

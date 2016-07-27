@@ -7,18 +7,19 @@ from common.config import extract_config
 class SourceHandler(object):
     @staticmethod
     def on_get(request, response):
-        config = dict()
+        config = list()
         databases = extract_config()
         if not databases:
             return False
 
         for _id, x in databases.items():
             url = urlparse(x)
-            config[_id] = dict(
+            config.append((_id, dict(
                 user=url.netloc[:url.netloc.find(':')],
                 host=url.netloc[url.netloc.find('@') + 1:],
                 database=url.path[1:]
-            )
+            )))
+        config = sorted(config, key=lambda x: x[0])
 
         response.body = json.dumps(config)
         response.set_header('Content-type', 'application/javascript')

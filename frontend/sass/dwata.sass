@@ -25,8 +25,13 @@ a
 		list-style: none
 		margin: 0
 		padding: 0
-		width: 100%
+		width: auto
 		position: relative
+		float: left
+		display: inline-block
+
+		&.menu-right
+			float: right
 
 		li
 			float: left
@@ -45,21 +50,33 @@ a
 					background-color: #4CAF50
 					color: #fff
 
-	ul.menu-child
+	div.menu-child-box
 		position: absolute
-		list-style: none
-		z-index: 2
 		border: 1px solid $navbar-border-color
+		z-index: 2
+		padding: 0
+		margin: 0
+		background-color: #fff
+
+	ul.menu-child
+		list-style: none
 		margin: 0
 		padding: 0
-		min-width: 160px
 		background: #fff
+		width: 160px
+		clear: both
 
 		li
+			width: 100%
+			clear: both
+			display: block
+
 			a
 				font-family: 'Lato', sans-serif
 				font-weight: 400
 				font-size: 14px
+				margin: 0
+				clear: both
 
 
 table.data

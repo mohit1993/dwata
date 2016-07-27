@@ -15,10 +15,12 @@ export default class Dwata extends React.Component {
   		queryResult: null,
   		columnOrder: null
   	}
-  	this.fetchSources = this.fetchSources.bind(this);
-  	this.fetchSchema = this.fetchSchema.bind(this);
-  	this.fetchData = this.fetchData.bind(this);
-  	this.changeColumnOrder = this.changeColumnOrder.bind(this);
+  	this.fetchSources = this.fetchSources.bind(this)
+  	this.fetchSchema = this.fetchSchema.bind(this)
+  	this.fetchData = this.fetchData.bind(this)
+  	this.changeColumnOrder = this.changeColumnOrder.bind(this)
+
+  	this.fetchSources()
 	}
 
 	fetchSources() {
@@ -90,7 +92,6 @@ export default class Dwata extends React.Component {
   		<Navbar
 				sources={this.state.sources}
 				currentSource={this.state.currentSource}
-				fetchSources={this.fetchSources}
 				schema={this.state.schema}
 				currentTable={this.state.currentTable}
 				fetchSchema={this.fetchSchema}

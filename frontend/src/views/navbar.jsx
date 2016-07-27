@@ -11,68 +11,87 @@ const NavbarMenuItemSub = (props) => <li className="menu-item">
 
 const NavbarMenuItem = (props) => {
 	var subMenu = null;
-	if (props.subMenuItems) {
-		subMenu = <ul className="menu-child">
+	if (props.subMenuItems && props.subMenuItems.length) {
+		subMenu = <div className="menu-child-box"><ul className="menu-child">
 			{ props.subMenuItems.map((item, i) => <NavbarMenuItemSub key={item.id} id={item.id}
 				label={item.label} clickHandler={props.subClickHandler} />) }
-		</ul>
+		</ul></div>
 	}
 
 	return (<li className={subMenu ? "menu-item has-children" : "pure-menu-item"}>
 		<a href="#" className="pure-menu-link"
-			onClick={ props.clickHandler ? (e) => { e.preventDefault(); props.clickHandler() } : null }>
+			onClick={ props.clickHandler ? (e) => { e.preventDefault(); props.clickHandler(props.id) } : null }>
 			{props.label} { props.meta ? <span className="meta">({props.meta})</span> : null }
 		</a>{subMenu}
 	</li>)
 }
 
 
-export default (props) => {
-	var navbarItems = [];
+export default class NavBar extends React.Component {
+	constructor(props) {
+		super(props)
 
-	if (props.sources) {
+		this.state = {
+			selected: null,
+			sources: props.sources,
+			currentSource: props.currentSource,
+			schema: props.schema,
+			currentTable: props.currentTable
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			sources: nextProps.sources,
+			currentSource: nextProps.currentSource,
+			schema: nextProps.schema,
+			currentTable: nextProps.currentTable
+		})
+	}
+
+	render() {
+		var navbarItems = [];
+
 		var sources = [];
-		for (var x in props.sources) {
-			sources.push({id: x, label: x})
-		}
-		navbarItems.push(<NavbarMenuItem
-			label="Sources"
-			meta={props.sources ? props.sources.length : null}
-			key="src"
-			subMenuItems={sources}
-			subClickHandler={props.fetchSchema} />)
-	} else {
-		navbarItems.push(<NavbarMenuItem
-			label="Sources"
-			meta={props.sources ? props.sources.length : null}
-			clickHandler={props.fetchSources}
-			key="src" />)
-	}
-	if (props.currentSource) {
-		if (props.schema) {
-			var schema = [];
-			for (var x in props.schema) {
-				schema.push({id: x, label: x})
+		if (this.state.sources && this.state.selected == 'src') {
+			for (var x = 0; x < this.state.sources.length; x++) {
+				sources.push({id: this.state.sources[x][0], label: this.state.sources[x][0]})
 			}
-			navbarItems.push(<NavbarMenuItem
-				label={props.currentSource}
-				meta={props.sources ? props.sources.length : null}
-				key={props.currentSource}
-				subMenuItems={schema}
-				subClickHandler={props.fetchData} />)
-		} else {
-			navbarItems.push(<NavbarMenuItem
-				label={props.currentSource}
-				meta={props.schema ? Object.keys(props.schema).length : null}
-				clickHandler={props.fetchSchema}
-				key={props.currentSource} />)
 		}
+		navbarItems.push(<NavbarMenuItem
+			label="Sources"
+			meta={this.state.sources ? this.state.sources.length : null}
+			key="src"
+			id="src"
+			clickHandler={ (sel) => { this.state.selected == "src" ? this.setState({selected: null}) : this.setState({selected: sel}) } }
+			subMenuItems={sources}
+			subClickHandler={this.props.fetchSchema} />)
+
+		var schema = [];
+		if (this.state.currentSource && this.state.schema && this.state.selected == 'src-' + this.state.currentSource) {
+			for (var x = 0; x < this.state.schema.length; x++) {
+				schema.push({id: this.state.schema[x][0], label: this.state.schema[x][0]})
+			}
+		}
+
+		if (this.state.currentSource) {
+			navbarItems.push(<NavbarMenuItem
+				label={this.state.currentSource}
+				meta={this.state.schema ? this.state.schema.length : null}
+				key={"src-" + this.state.currentSource}
+				id={"src-" + this.state.currentSource}
+				clickHandler={ (sel) => { this.state.selected == "src-" + this.state.currentSource ? this.setState({selected: null}) : this.setState({selected: "src-" + this.state.currentSource}) } }
+				subMenuItems={schema}
+				subClickHandler={this.props.fetchData} />)
+		}
+
+		var rightNavbarItems = [];
+		rightNavbarItems.push(<NavbarMenuItem label="Admin" key="adm" />);
+	  rightNavbarItems.push(<NavbarMenuItem label="Logout" key="lot" />);
+
+		return (<div id="top-menu">
+	    <ul className="menu-list">{navbarItems}</ul>
+	    <ul className="menu-list menu-right">{rightNavbarItems}</ul>
+	  </div>)
 	}
-
-	navbarItems.push(<NavbarMenuItem label="Admin" key="adm" />);
-  navbarItems.push(<NavbarMenuItem label="Logout" key="lot" />);
-
-	return (<div id="top-menu">
-    <ul className="menu-list">{navbarItems}</ul>
-  </div>)
 }
