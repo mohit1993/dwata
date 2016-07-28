@@ -10,12 +10,27 @@ const NavbarMenuItemSub = (props) => <li className="menu-item">
 
 
 const NavbarMenuItem = (props) => {
-	var subMenu = null;
-	if (props.subMenuItems && props.subMenuItems.length) {
-		subMenu = <div className="menu-child-box"><ul className="menu-child">
-			{ props.subMenuItems.map((item, i) => <NavbarMenuItemSub key={item.id} id={item.id}
-				label={item.label} clickHandler={props.subClickHandler} />) }
-		</ul></div>
+	var subMenu = null,
+		subRows = 12,
+		colMenus = [],
+		subs = props.subMenuItems
+
+	if (subs && subs.length) {
+		if (subs.length > subRows) {
+			for (var cols = 0; cols < (subs.length / subRows); cols ++) {
+				colMenus.push(<ul className="menu-child" key={ cols }>
+					{ subs.slice(cols * subRows, (cols + 1) * subRows).map((item, i) => <NavbarMenuItemSub
+						key={item.id} id={item.id}
+						label={item.label} clickHandler={props.subClickHandler} />) }
+					</ul>)
+			}
+		} else {
+			colMenus.push(<ul className="menu-child" key="one">
+				{ subs.map((item, i) => <NavbarMenuItemSub key={item.id} id={item.id}
+					label={item.label} clickHandler={props.subClickHandler} />) }
+				</ul>)
+		}
+		subMenu = <div className="menu-child-box" style={{ width: (subs.length > subRows ? Math.floor(subs.length/subRows) : 1) * 160 + "px" }}>{ colMenus }</div>
 	}
 
 	return (<li className={subMenu ? "menu-item has-children" : "pure-menu-item"}>

@@ -5,8 +5,8 @@ const GridHead = (props) => <thead><tr>
 		{ props.headings.map((head, i) => <th
 				key={i}
 				onClick={ (e) => { e.preventDefault(); props.handleHeadClick(head); } }
-				style={{cursor: "pointer"}}>
-				{head} { props.ordering && head in props.ordering ? <i className={"fa fa-sort-" + props.ordering[head]} aria-hidden="true"></i> : null }</th>) }
+				className={ props.ordering && head in props.ordering ? props.ordering[head] : null }>
+				{head}</th>) }
 	</tr></thead>
 
 
