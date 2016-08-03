@@ -34,7 +34,7 @@ export default class Grid extends React.Component {
 
 		this.state = {
 			schema: null,
-			currentTable: null,
+			currentTable: props.currentTable,
 			queryResult: props.queryResult,
 			ordering: null
 		}

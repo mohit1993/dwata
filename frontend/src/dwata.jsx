@@ -2,6 +2,7 @@ import React from 'react'
 
 import Navbar from './views/navbar.jsx'
 import Grid from './views/grid.jsx'
+import Query from './views/query.jsx'
 
 
 export default class Dwata extends React.Component {
@@ -13,12 +14,15 @@ export default class Dwata extends React.Component {
   		schema: null,
   		currentTable: null,
   		queryResult: null,
-  		columnOrder: null
+  		columnOrder: null,
+  		queryBox: false
   	}
   	this.fetchSources = this.fetchSources.bind(this)
   	this.fetchSchema = this.fetchSchema.bind(this)
   	this.fetchData = this.fetchData.bind(this)
   	this.changeColumnOrder = this.changeColumnOrder.bind(this)
+  	this.toggleState = this.toggleState.bind(this)
+  	this.fetchQueryData = this.fetchQueryData.bind(this)
 
   	this.fetchSources()
 	}
@@ -73,6 +77,28 @@ export default class Dwata extends React.Component {
 		xhr.send();
 	}
 
+	fetchQueryData(query, columnOrder = null) {
+		var xhr = new XMLHttpRequest();
+		columnOrder = columnOrder || this.state.columnOrder;
+		var urlParams = []
+		if (columnOrder) {
+			for (var x in columnOrder) {
+				urlParams.push('order_by=' + x + ':' + columnOrder[x]);
+			}
+		}
+		xhr.open("GET", "/api/table/query/" + this.state.currentSource + "/?" + urlParams.join('&'));
+		xhr.responseType = "json"
+		xhr.onreadystatechange = (() => {
+			if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
+				this.setState({
+					queryResult: xhr.response,
+					columnOrder: columnOrder
+				});
+			}
+		}).bind(this);
+		xhr.send();
+	}
+
 	changeColumnOrder(column, order) {
 		var columnOrder = this.state.columnOrder || {};
 		if (column in columnOrder) {
@@ -87,6 +113,12 @@ export default class Dwata extends React.Component {
 		this.fetchData(this.state.currentTable, columnOrder);
 	}
 
+	toggleState(variable) {
+		var temp = {}
+		temp[variable] = !this.state[variable]
+		this.setState(temp)
+	}
+
   render() {
   	return (<div>
   		<Navbar
@@ -95,7 +127,9 @@ export default class Dwata extends React.Component {
 				schema={this.state.schema}
 				currentTable={this.state.currentTable}
 				fetchSchema={this.fetchSchema}
-				fetchData={this.fetchData} />
+				fetchData={this.fetchData}
+				toggleParentState={this.toggleState} />
+			{ this.state.queryBox ? <Query fetchQueryData={this.fetchQueryData} /> : null }
   		<Grid
 				schema={this.state.schema}
 				currentTable={this.state.currentTable}

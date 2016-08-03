@@ -98,6 +98,15 @@ export default class NavBar extends React.Component {
 				clickHandler={ (sel) => { this.state.selected == "src-" + this.state.currentSource ? this.setState({selected: null}) : this.setState({selected: "src-" + this.state.currentSource}) } }
 				subMenuItems={schema}
 				subClickHandler={this.props.fetchData} />)
+
+			if (this.state.currentSource) {
+				navbarItems.push(<NavbarMenuItem
+						label="Query"
+						key="query"
+						id="query"
+						clickHandler={ () => { this.props.toggleParentState('queryBox') } }
+					/>)
+			}
 		}
 
 		var rightNavbarItems = [];
