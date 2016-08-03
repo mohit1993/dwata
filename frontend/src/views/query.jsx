@@ -11,6 +11,7 @@ export default class Query extends React.Component {
 		}
 
 		this.handleTextChange = this.handleTextChange.bind(this)
+		this.handleKeyUp = this.handleKeyUp.bind(this)
 	}
 
 	handleTextChange(event) {
@@ -18,12 +19,15 @@ export default class Query extends React.Component {
 	}
 
 	handleKeyUp(event) {
-		
+		if (event.keyCode == 13 && event.shiftKey && this.state.text) {
+			this.props.fetchQueryData(this.state.text)
+		}
 	}
 
 	render() {
 		return (<div id="query-box">
-			<div className="query-textbox"><textarea value={this.state.text} onChange={this.handleTextChange} /></div>
+			<div className="query-textbox"><textarea value={this.state.text} onChange={this.handleTextChange}
+			 onKeyUp={this.handleKeyUp} /></div>
 		</div>)
 	}
 }

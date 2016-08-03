@@ -86,7 +86,8 @@ export default class Dwata extends React.Component {
 				urlParams.push('order_by=' + x + ':' + columnOrder[x]);
 			}
 		}
-		xhr.open("GET", "/api/table/query/" + this.state.currentSource + "/?" + urlParams.join('&'));
+		xhr.open("POST", "/api/query/" + this.state.currentSource + "/?" + urlParams.join('&'));
+		xhr.setRequestHeader("Content-type", "application/json")
 		xhr.responseType = "json"
 		xhr.onreadystatechange = (() => {
 			if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
@@ -96,7 +97,7 @@ export default class Dwata extends React.Component {
 				});
 			}
 		}).bind(this);
-		xhr.send();
+		xhr.send(JSON.stringify({query: query}));
 	}
 
 	changeColumnOrder(column, order) {
