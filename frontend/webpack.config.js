@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/index.jsx',
   module: {
     loaders: [{
-      test: /\.jsx$/,
+      test: /\.js(x?)$/,
       loader: 'babel-loader?presets[]=es2015&presets[]=react'
     }]
   },
