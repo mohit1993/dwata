@@ -1,21 +1,25 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
 
 
 // import { APIHost } from './config.jsx'
 import Dwata from './components/Dwata.jsx'
 import dwata from './reducers'
 
-let store = createStore(dwata)
+let store = createStore(
+	dwata,
+	applyMiddleware(
+		thunkMiddleware
+	)
+)
 
 store.dispatch({
-	type: 'TOPNAV_NAV_ADD',
+	type: 'TOPNAV_ADD',
 	nav: {
-		index: 'tnav-src',
-		label: 'Source',
-		active: false,
+		label: 'Dwata',
 		side: 'left'
 	}
 })

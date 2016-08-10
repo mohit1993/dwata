@@ -13,12 +13,13 @@ const nav = (state = firstNavItem, action) => {
 	}
 
 	switch (action.type) {
-		case 'TOPNAV_NAV_ADD':
+		case 'TOPNAV_ADD':
 			return Object.assign({}, action.nav, {
-				index: nextNavIndex++
+				index: nextNavIndex++,
+				active: false
 			})
 
-		case 'TOPNAV_NAV_CLICK':
+		case 'TOPNAV_CLICK':
 			if (state.index !== action.index) {
 				return state
 			}
@@ -34,10 +35,10 @@ const nav = (state = firstNavItem, action) => {
 
 const topNav = (state = [], action) => {
 	switch (action.type) {
-		case 'TOPNAV_NAV_ADD':
+		case 'TOPNAV_ADD':
 			return [...state, nav(undefined, action)]
 
-		case 'TOPNAV_NAV_CLICK':
+		case 'TOPNAV_CLICK':
 			return state.map(t => nav(t, action))
 
 		default:
