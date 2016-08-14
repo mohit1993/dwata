@@ -15,7 +15,7 @@ a
   color: #165eb9
 
 
-#top-menu
+#top-nav
   width: 100%
   height: 32px
   border-bottom: 1px solid $navbar-border-color
@@ -48,8 +48,7 @@ a
         cursor: default
 
         &:hover
-          background-color: #4CAF50
-          color: #fff
+          background-color: #EEE
 
       &.active
         background-color: #4CAF50
@@ -63,15 +62,42 @@ a
           padding: 0 16px
           cursor: default
 
-  div.menu-child-box
-    position: absolute
-    border: 1px solid $navbar-border-color
-    z-index: 2
-    padding: 0
-    margin: 0
-    background-color: #fff
+#side-nav
+  display: none
+  position: absolute
+  border: 1px solid $navbar-border-color
+  border-top: none
+  z-index: 2
+  padding: 0
+  margin: 0
+  background-color: #fff
+  min-width: 180px
+  min-height: 200px
 
-  ul.menu-child
+  &.visible
+    display: block
+
+  .form-el-cont
+    margin: 0 0 8px
+
+    .label-cont
+      margin: 0 0 2px
+
+      label
+        background: #EFEFEF
+        color: #9A9A9A
+        text-transform: capitalize
+
+    .el-cont
+      width: 100%
+      margin: 2px 0 0
+
+  .head
+    background: #EFEFEF
+    color: #9A9A9A
+    padding: 12px 6px 6px
+
+  ul.list
     margin: 0
     padding: 0
     width: 160px
@@ -146,3 +172,15 @@ table.grid
     textarea
       width: 100%
       max-width: 100%
+
+
+.form-el-cont
+  .label-cont
+    label
+      padding: 12px 6px 6px
+      display: block
+
+  .el-cont
+    .form-input
+      display: block
+      width: 100%

@@ -1,18 +1,11 @@
-export const SIDEBAR_ADD = 'SIDEBAR_ADD'
+export const SIDENAV_ADD = 'SIDENAV_ADD'
 export const navAddItem = (nav) => {
   return {
-    type: SIDEBAR_ADD,
+    type: SIDENAV_ADD,
     nav: nav
   }
 }
 
-export const SIDEBAR_CLICK = 'SIDEBAR_CLICK'
-export const navClickItem = (index) => {
-  return {
-    type: SIDEBAR_CLICK,
-    index: index
-  }
-}
 
 export const TOPNAV_CLICK = 'TOPNAV_CLICK'
 export const topNavClick = (index) => {
@@ -22,33 +15,76 @@ export const topNavClick = (index) => {
   }
 }
 
-export const SOURCES_REQUEST = 'SOURCES_REQUEST'
-export const requestSources = () => {
-  return {
-    type: SOURCES_REQUEST
-  }
-}
-
-export const receiveSources = (data) => {
-  return {
-    type: SIDEBAR_ADD,
-    sources: data.results,
-    receivedAt: Date.now()
-  }
-}
-
 export const fetchSources = () => {
-  return function (dispatch) {
-    dispatch(requestSources())
-
+  return (dispatch, getState) => {
+    // dispatch(requestSources())
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/api/source/");
     xhr.responseType = "json";
-    xhr.onreadystatechange = (() => {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
-        dispatch(receiveSources(xhr.response));
+        // console.log("Hello", xhr.response)
+        for (var x in xhr.response) {
+          var item = xhr.response[x][0]
+          dispatch({
+            type: SIDENAV_ADD,
+            nav: {
+              label: item,
+              index: item
+            }
+          });
+        }
       }
-    });
+    }
+    xhr.send();
+  }
+}
+
+export const SIDENAV_CHILD_ADD = 'SIDENAV_CHILD_ADD'
+export const selectSource = (index) => {
+  return (dispatch, getState) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/schema/" + index + "/");
+    xhr.responseType = "json"
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
+        dispatch({type: 'SIDENAV_SELECT_SOURCE'})
+        for (var x in xhr.response) {
+          var item = xhr.response[x]
+          dispatch({
+            type: SIDENAV_CHILD_ADD,
+            nav: {
+              label: item[0],
+              index: item[0],
+              struct: item[1]
+            }
+          })
+        }
+      }
+    }
+    xhr.send();
+  }
+}
+
+
+export const selectTable = (index) => {
+  return (dispatch, getState) => {
+    var xhr = new XMLHttpRequest();
+    columnOrder = columnOrder || this.state.columnOrder;
+    var urlParams = []
+    if (columnOrder) {
+      for (var x in columnOrder) {
+        urlParams.push('order_by=' + x + ':' + columnOrder[x]);
+      }
+    }
+    var source = getState().sideNav.items.filter(x => x.active)[0].index
+    xhr.open("GET", "/api/table/data/" + source + "/" + index + "/?" + urlParams.join('&'));
+    xhr.responseType = "json"
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
+        console.log(xhr.response)
+      }
+    }
     xhr.send();
   }
 }

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { NavBarSub, shapeNavBarSub } from './NavBar.jsx'
 
 
-const TopNavBar = ({ leftNav, rightNav, onClick }) => (<div id="top-menu">
+const TopNavBar = ({ leftNav, rightNav, onClick }) => (<div id="top-nav">
   <ul className="menu-list">
     {leftNav.map(nav => <NavBarSub key={nav.index} {...nav} onClick={(e) => { e.preventDefault(); onClick(nav.index) }} />)}
   </ul>
