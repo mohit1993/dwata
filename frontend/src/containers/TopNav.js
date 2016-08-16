@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import TopNavBar from '../components/TopNavBar.jsx'
+import TopNavComponent from '../components/TopNavBar.jsx'
 import { topNavClick } from '../actions/index.js'
 
 
@@ -31,6 +31,6 @@ const mapDispatchToProps = (dispatch) => {
 const TopNav = connect(
   mapStateToProps,
   mapDispatchToProps
-)(TopNavBar)
+)(TopNavComponent)
 
 export default TopNav

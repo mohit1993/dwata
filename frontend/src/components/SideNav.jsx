@@ -6,7 +6,7 @@ const shapeSideNavItem = Object.assign({}, shapeNavBarSub, {
   children: PropTypes.arrayOf(PropTypes.shape(shapeNavBarSub))
 })
 
-const SideNavBar = ({ items, isVisible, onSelect, children, onClick }) => (<div id="side-nav" className={ isVisible ? "visible" : "hidden" } >
+const SideNav = ({ items, isVisible, onSelect, children, onClick }) => (<div id="side-nav" className={ isVisible ? "visible" : "hidden" } >
   <div className="form-el-cont">
     <div className="label-cont"><label htmlFor="select-source">Sources</label></div>
     { items ?
@@ -22,7 +22,7 @@ const SideNavBar = ({ items, isVisible, onSelect, children, onClick }) => (<div 
     : null }
 </div>)
 
-SideNavBar.propTypes = {
+SideNav.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape(shapeSideNavItem)).isRequired,
   children: PropTypes.arrayOf(PropTypes.shape(shapeSideNavItem)),
   isVisible: PropTypes.bool.isRequired,
@@ -30,4 +30,4 @@ SideNavBar.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-export default SideNavBar
+export default SideNav

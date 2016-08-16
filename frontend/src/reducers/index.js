@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux'
 import topNav from './topNav.js'
 import sideNav from './sideNav.js'
+import grid from './grid.js'
 
 
-const dwataApp = combineReducers({
+const dwata = combineReducers({
 	topNav,
-	sideNav
+	sideNav,
+	grid
 })
 
-export default dwataApp
+export default dwata

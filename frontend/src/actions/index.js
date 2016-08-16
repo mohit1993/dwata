@@ -69,20 +69,28 @@ export const selectSource = (index) => {
 
 export const selectTable = (index) => {
   return (dispatch, getState) => {
-    var xhr = new XMLHttpRequest();
-    columnOrder = columnOrder || this.state.columnOrder;
+    var xhr = new XMLHttpRequest()
+    var state = getState()
+    var columnOrder = state.grid.operations.ordering
     var urlParams = []
     if (columnOrder) {
       for (var x in columnOrder) {
         urlParams.push('order_by=' + x + ':' + columnOrder[x]);
       }
     }
-    var source = getState().sideNav.items.filter(x => x.active)[0].index
+    var source = state.sideNav.items.filter(x => x.active)[0].index
     xhr.open("GET", "/api/table/data/" + source + "/" + index + "/?" + urlParams.join('&'));
     xhr.responseType = "json"
     xhr.onreadystatechange = () => {
       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
-        console.log(xhr.response)
+        dispatch({
+          type: 'DATA_SET_HEAD',
+          heads: xhr.response.keys
+        })
+        dispatch({
+          type: 'DATA_SET_RESULT',
+          results: xhr.response.results
+        })
       }
     }
     xhr.send();

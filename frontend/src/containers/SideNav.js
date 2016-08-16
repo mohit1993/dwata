@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import SideNavBar from '../components/SideNav.jsx'
+import SideNavComponent from '../components/SideNav.jsx'
 import { selectSource, selectTable } from '../actions/index.js'
 
 
@@ -31,6 +31,6 @@ const mapDispatchToProps = (dispatch) => {
 const SideNav = connect(
   mapStateToProps,
   mapDispatchToProps
-)(SideNavBar)
+)(SideNavComponent)
 
 export default SideNav
