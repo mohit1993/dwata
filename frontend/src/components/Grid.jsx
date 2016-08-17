@@ -7,13 +7,11 @@ const GridRow = ({ row }) => (<tr>
 
 const Grid = ({ heads, results, onHeadClick}) => (<table className="grid">
 		<thead><tr>{ heads.map((item, i) => <th key={i} onClick={() => props.onHeadClick(item)}>{item}</th>) }</tr></thead>
-		<tbody>{ results ? <GridBody row={results} /> : null }</tbody>
+		<tbody>{ results.map((row, i) => <GridRow row={row} key={i} />) }</tbody>
 	</table>)
 
-Grid.contextTypes = {
-  head: PropTypes.arrayOf(PropTypes.shape({
-  	label: PropTypes.string.isRequired
-  })).isRequired,
+Grid.propTypes = {
+  heads: PropTypes.array.isRequired,
   results: PropTypes.array.isRequired,
   onHeadClick: PropTypes.func.isRequired
 };

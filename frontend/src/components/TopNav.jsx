@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { NavBarSub, shapeNavBarSub } from './NavBar.jsx'
 
 
-const TopNavBar = ({ leftNav, rightNav, onClick }) => (<div id="top-nav">
+const TopNav = ({ leftNav, rightNav, onClick }) => (<div id="top-nav">
   <ul className="menu-list">
     {leftNav.map(nav => <NavBarSub key={nav.index} {...nav} onClick={(e) => { e.preventDefault(); onClick(nav.index) }} />)}
   </ul>
@@ -11,10 +11,10 @@ const TopNavBar = ({ leftNav, rightNav, onClick }) => (<div id="top-nav">
   </ul>
 </div>)
 
-TopNavBar.propTypes = {
+TopNav.propTypes = {
   leftNav: PropTypes.arrayOf(PropTypes.shape(shapeNavBarSub)),
   rightNav: PropTypes.arrayOf(PropTypes.shape(shapeNavBarSub)),
   onClick: PropTypes.func
 }
 
-export default TopNavBar
+export default TopNav

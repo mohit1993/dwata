@@ -2,19 +2,13 @@ import { combineReducers } from 'redux'
 
 
 const gridOperations = (state = {ordering: null, filters: null, group_by: null}, action) => {
-  if (typeof action === 'undefined') {
-    return state
-  }
   switch (action.type) {
     default:
       return state
   }
 }
 
-const gridHead = (state = {items: []}, action) => {
-  if (typeof action === 'undefined') {
-    return state
-  }
+const gridHead = (state = [], action) => {
   switch (action.type) {
     case 'DATA_SET_HEAD':
       return action.heads
@@ -24,10 +18,7 @@ const gridHead = (state = {items: []}, action) => {
   }
 }
 
-const gridBody = (state = {items: []}, action) => {
-  if (typeof action === 'undefined') {
-    return state
-  }
+const gridBody = (state = [], action) => {
   switch (action.type) {
     case 'DATA_SET_RESULT':
       return action.results
@@ -37,22 +28,21 @@ const gridBody = (state = {items: []}, action) => {
   }
 }
 
-// const grid = (state = {head: null, body: null, operations: null}, action) => {
-//   switch (action.type) {
-//     default:
-//       console.log(action)
-//       return {
-//         head: gridHead(state.head ? state.head : undefined, action),
-//         body: gridBody(state.body ? state.body : undefined, action),
-//         operations: gridOperations(state.operations ? state.operations : undefined, action)
-//       }
-//   }
-// }
+const grid = (state = {heads: [], results: [], operations: {}}, action) => {
+  switch (action.type) {
+    case 'DATA_SET_HEAD':
+      return Object.assign({}, state, {
+        heads: gridHead(state.heads, action)
+      })
 
-const grid = combineReducers({
-  head: gridHead,
-  body: gridBody,
-  operations: gridOperations
-})
+    case 'DATA_SET_RESULT':
+      return Object.assign({}, state, {
+        results: gridBody(state.results, action)
+      })
+
+    default:
+      return state
+  }
+}
 
 export default grid

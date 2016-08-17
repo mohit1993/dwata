@@ -1,12 +1,10 @@
 import { connect } from 'react-redux'
 import GridComponent from '../components/Grid.jsx'
-import { selectSource, selectTable } from '../actions/index.js'
-
 
 const mapStateToProps = (state) => {
   return {
-    head: state.grid.head,
-    results: state.grid.body,
+    heads: state.grid.heads,
+    results: state.grid.results,
     operations: state.grid.operations
   }
 }
@@ -18,7 +16,6 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
-
 
 const Grid = connect(
   mapStateToProps,

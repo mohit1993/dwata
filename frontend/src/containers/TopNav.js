@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import TopNavComponent from '../components/TopNavBar.jsx'
+import TopNavComponent from '../components/TopNav.jsx'
 import { topNavClick } from '../actions/index.js'
 
 
