@@ -101,7 +101,7 @@ a
   ul.list
     margin: 0
     padding: 0
-    width: 160px
+    width: 100%
     display: block
     float: left
 
@@ -109,14 +109,42 @@ a
       width: 100%
       clear: both
       display: block
+      line-height: 20px
+      cursor: pointer
+
+      &:hover
+        background-color: #efefef
+
+      span
+        font-family: 'Lato', sans-serif
+        font-weight: 400
+        font-size: 14px
+        margin: 0 0 0 4px
+        display: block
+
+        span.circle
+          width: 8px
+          height: 8px
+          background-color: #4CAF50
+          border-radius: 50%
+          margin: 0 4px 0 0
+          display: inline-block
 
       a
         font-family: 'Lato', sans-serif
         font-weight: 400
         font-size: 14px
-        margin: 0
-        clear: both
+        margin: 0 0 0 16px
+        display: block
 
+div.grid-cont
+  div.sel-data
+    padding: 0 0 0 12px
+    font-family: "Lato", sans-serif
+    line-height: 24px
+    border-bottom: 1px solid $grid-border-color
+    height: 24px
+    overflow: hidden
 
 table.grid
   border-collapse: collapse

@@ -4,12 +4,12 @@ import { selectSource, selectTable } from '../actions/index.js'
 
 
 const mapStateToProps = (state) => {
-  var filtered = state.sideNav.items ? state.sideNav.items.filter(x => x.active) : null
+  var filtered = state.sideNav.sources ? state.sideNav.sources.filter(x => x.active) : null
   return {
     isVisible: state.sideNav.isVisible,
-    items: state.sideNav.items,
+    sources: state.sideNav.sources,
     selectedIndex: filtered  && filtered.length ? filtered[0].index : null,
-    children: state.sideNav.children
+    tables: state.sideNav.tables
   }
 }
 
@@ -23,6 +23,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(selectSource(index))
     },
     onClick: index => {
+      dispatch({
+        type: 'SIDENAV_CLICK_TABLE',
+        index: index
+      })
       dispatch(selectTable(index))
     }
   }

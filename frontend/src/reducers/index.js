@@ -5,9 +5,9 @@ import grid from './grid.js'
 
 
 const dwata = combineReducers({
-	topNav,
-	sideNav,
-	grid
+  topNav,
+  sideNav,
+  grid
 })
 
 export default dwata

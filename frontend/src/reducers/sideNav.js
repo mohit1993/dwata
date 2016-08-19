@@ -6,15 +6,19 @@ const nav = (state, action) => {
   }
 
   switch (action.type) {
-    case 'SIDENAV_ADD':
+    case 'SIDENAV_ADD_SOURCE':
       return Object.assign({}, action.nav, {
         index: action.nav.index ? action.nav.index : nextNavIndex++,
         active: false
       })
 
     case 'SIDENAV_CLICK':
-      if (state.index !== action.index) {
+      if (state.index !== action.index && !state.active) {
         return state
+      } else if (state.index !== action.index && state.active) {
+        return Object.assign({}, state, {
+          active: false
+        })
       }
 
       return Object.assign({}, state, {
@@ -32,15 +36,19 @@ const child = (state, action) => {
   }
 
   switch (action.type) {
-    case 'SIDENAV_CHILD_ADD':
+    case 'SIDENAV_ADD_TABLE':
       return Object.assign({}, action.nav, {
         index: action.nav.index ? action.nav.index : nextNavIndex++,
         active: false
       })
 
-    case 'SIDENAV_CHILD_CLICK':
-      if (state.index !== action.index) {
+    case 'SIDENAV_CLICK_TABLE':
+      if (state.index !== action.index && !state.active) {
         return state
+      } else if (state.index !== action.index && state.active) {
+        return Object.assign({}, state, {
+          active: false
+        })
       }
 
       return Object.assign({}, state, {
@@ -52,21 +60,21 @@ const child = (state, action) => {
   }
 }
 
-const sideNav = (state = {isVisible: false, items: [], children: []}, action) => {
+const sideNav = (state = {isVisible: false, sources: [], tables: []}, action) => {
   switch (action.type) {
     case 'SIDENAV_SELECT_SOURCE':
       return Object.assign({}, state, {
-        children: []
+        tables: []
       })
 
-    case 'SIDENAV_ADD':
+    case 'SIDENAV_ADD_SOURCE':
       return Object.assign({}, state, {
-        items: [...state.items, nav(undefined, action)]
+        sources: [...state.sources, nav(undefined, action)]
       })
 
     case 'SIDENAV_CLICK':
       return Object.assign({}, state, {
-        items: state.items.map(t => nav(t, action))
+        sources: state.sources.map(t => nav(t, action))
       })
 
     case 'TOPNAV_CLICK':
@@ -77,14 +85,14 @@ const sideNav = (state = {isVisible: false, items: [], children: []}, action) =>
       }
       return state
 
-    case 'SIDENAV_CHILD_ADD':
+    case 'SIDENAV_ADD_TABLE':
       return Object.assign({}, state, {
-        children: [...state.children, child(undefined, action)]
+        tables: [...state.tables, child(undefined, action)]
       })
 
-    case 'SIDENAV_CHILD_CLICK':
+    case 'SIDENAV_CLICK_TABLE':
       return Object.assign({}, state, {
-        children: state.children.map(t => child(t, action))
+        tables: state.tables.map(t => child(t, action))
       })
 
     default:

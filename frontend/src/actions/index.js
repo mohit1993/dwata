@@ -1,12 +1,3 @@
-export const SIDENAV_ADD = 'SIDENAV_ADD'
-export const navAddItem = (nav) => {
-  return {
-    type: SIDENAV_ADD,
-    nav: nav
-  }
-}
-
-
 export const TOPNAV_CLICK = 'TOPNAV_CLICK'
 export const topNavClick = (index) => {
   return {
@@ -27,7 +18,7 @@ export const fetchSources = () => {
         for (var x in xhr.response) {
           var item = xhr.response[x][0]
           dispatch({
-            type: SIDENAV_ADD,
+            type: 'SIDENAV_ADD_SOURCE',
             nav: {
               label: item,
               index: item
@@ -40,7 +31,7 @@ export const fetchSources = () => {
   }
 }
 
-export const SIDENAV_CHILD_ADD = 'SIDENAV_CHILD_ADD'
+
 export const selectSource = (index) => {
   return (dispatch, getState) => {
     var xhr = new XMLHttpRequest();
@@ -52,7 +43,7 @@ export const selectSource = (index) => {
         for (var x in xhr.response) {
           var item = xhr.response[x]
           dispatch({
-            type: SIDENAV_CHILD_ADD,
+            type: 'SIDENAV_ADD_TABLE',
             nav: {
               label: item[0],
               index: item[0],
@@ -67,28 +58,31 @@ export const selectSource = (index) => {
 }
 
 
-export const selectTable = (index) => {
+export const selectTable = () => {
   return (dispatch, getState) => {
     var xhr = new XMLHttpRequest()
     var state = getState()
-    var columnOrder = state.grid.operations.ordering
+    var columnOrder = state.grid.ordering
     var urlParams = []
     if (columnOrder) {
       for (var x in columnOrder) {
-        urlParams.push('order_by=' + x + ':' + columnOrder[x]);
+        if (columnOrder[x] != null) {
+          urlParams.push('order_by=' + x + ':' + columnOrder[x]);
+        }
       }
     }
-    var source = state.sideNav.items.filter(x => x.active)[0].index
-    xhr.open("GET", "/api/table/data/" + source + "/" + index + "/?" + urlParams.join('&'));
+    var source = state.sideNav.sources.filter(x => x.active)[0].index
+    var table = state.sideNav.tables.filter(x => x.active)[0].index
+    xhr.open("GET", "/api/table/data/" + source + "/" + table + "/?" + urlParams.join('&'));
     xhr.responseType = "json"
     xhr.onreadystatechange = () => {
       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
         dispatch({
-          type: 'DATA_SET_HEAD',
+          type: 'GRID_SET_HEAD',
           heads: xhr.response.keys
         })
         dispatch({
-          type: 'DATA_SET_RESULT',
+          type: 'GRID_SET_RESULT',
           results: xhr.response.results
         })
       }
