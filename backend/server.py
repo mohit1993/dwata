@@ -16,7 +16,7 @@ api.add_sink(assets_handler, prefix=r'/asset/')
 api.add_route('/api/source/', SourceHandler())
 
 api.add_route('/api/schema/{source}/', SchemaHandler())
-api.add_route('/api/table/data/{source}/{table}/', ReadHandler())
+api.add_route('/api/data/{source}/{table}/', ReadHandler())
 api.add_route('/api/query/{source}/', QueryHandler())
 # api.add_route('/schema/alter/', )
 #
