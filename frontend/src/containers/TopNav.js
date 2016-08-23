@@ -15,7 +15,9 @@ const getNav = (navItems, side) => {
 
 const mapStateToProps = (state) => {
   return {
-    leftNav: getNav(state.topNav, 'TOPNAV_LEFT'),
+    leftNav: getNav(state.topNav, 'TOPNAV_LEFT').map(x => x.shortcut ? Object.assign({}, x, {
+      label: state.tables.find(i => i.index == x.index).label
+    }) : x),
     rightNav: getNav(state.topNav, 'TOPNAV_RIGHT')
   }
 }
@@ -23,7 +25,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onClick: (index) => {
-      dispatch(topNavClick(index))
+      if (index.indexOf("data/") != -1) {
+        dispatch({type: 'SELECT_TABLE', index: index})
+      } else if (index.indexOf("query/") != -1) {
+        dispatch({type: 'SELECT_TABLE', index: index})
+      } else {
+        dispatch({type: 'TOPNAV_CLICK', index: index})
+      }
     }
   }
 }

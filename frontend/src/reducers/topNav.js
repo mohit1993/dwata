@@ -1,22 +1,17 @@
-let nextNavIndex = 0
-
 const firstNavItem = {
-  label: 'Sources',
-  index: 'tnav-' + nextNavIndex++,
+  label: 'Dwata',
+  index: 'top-nav-dwata',
   meta: null,
-  active: false
+  active: false,
+  side: 'left'
 }
 
-const nav = (state = firstNavItem, action) => {
-  if (typeof action === 'undefined') {
-    return state
-  }
-
+const nav = (state = {}, action) => {
   switch (action.type) {
     case 'TOPNAV_ADD':
       return Object.assign({}, action.nav, {
-        index: action.nav.index ? action.nav.index : nextNavIndex++,
-        active: false
+        index: action.nav.index,
+        active: action.nav.active != undefined ? action.nav.active : false
       })
 
     case 'TOPNAV_CLICK':
@@ -33,9 +28,10 @@ const nav = (state = firstNavItem, action) => {
   }
 }
 
-const topNav = (state = [], action) => {
+const topNav = (state = [firstNavItem], action) => {
   switch (action.type) {
     case 'TOPNAV_ADD':
+    case 'SELECT_TABLE':
       return [...state, nav(undefined, action)]
 
     case 'TOPNAV_CLICK':

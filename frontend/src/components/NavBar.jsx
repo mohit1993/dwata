@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 
 
 export const shapeNavBarSub = {
-  index: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  index: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   meta: PropTypes.string,

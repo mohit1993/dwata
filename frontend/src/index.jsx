@@ -17,15 +17,6 @@ let store = createStore(
   )
 )
 
-store.dispatch({
-  type: 'TOPNAV_ADD',
-  nav: {
-    label: 'Dwata',
-    side: 'left',
-    index: 'top-nav-dwata'
-  }
-})
-
 store.dispatch(fetchSources())
 
 ReactDOM.render(
