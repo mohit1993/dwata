@@ -25,7 +25,6 @@ export const selectSource = (index) => {
     xhr.responseType = "json"
     xhr.onreadystatechange = () => {
       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
-        dispatch({type: 'SIDENAV_SELECT_SOURCE'})
         dispatch({
           type: 'TABLE_ADD_MULTI',
           source: index,

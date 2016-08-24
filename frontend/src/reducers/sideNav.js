@@ -6,12 +6,6 @@ const child = (state, action) => {
   }
 
   switch (action.type) {
-    case 'SIDENAV_ADD_TABLE':
-      return Object.assign({}, action.nav, {
-        index: action.nav.index ? action.nav.index : nextNavIndex++,
-        active: false
-      })
-
     case 'SIDENAV_CLICK_TABLE':
       if (state.index !== action.index && !state.active) {
         return state
@@ -30,18 +24,8 @@ const child = (state, action) => {
   }
 }
 
-const sideNav = (state = {isVisible: false, tables: []}, action) => {
+const sideNav = (state = {isVisible: false}, action) => {
   switch (action.type) {
-    case 'SIDENAV_SELECT_SOURCE':
-      return Object.assign({}, state, {
-        tables: []
-      })
-
-    case 'SIDENAV_ADD_TABLE':
-      return Object.assign({}, state, {
-        tables: [...state.tables, child(undefined, action)]
-      })
-
     case 'SIDENAV_CLICK_TABLE':
       return Object.assign({}, state, {
         tables: state.tables.map(t => child(t, action))

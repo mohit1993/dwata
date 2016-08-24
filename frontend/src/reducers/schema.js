@@ -24,11 +24,8 @@ export const sources = (state = [], action) => {
 
     case 'SOURCE_ADD_TABLES':
       return state.map(x => {
-        if (x.index != action.source) {
-          return x
-        }
-        return Object.assign({}, x, {
-          tables: [].concat(x.tables, action.tables.map(x => "data/" + action.source + "/" + x[0]))
+        return (x.index != action.source) ? x : Object.assign({}, x, {
+          tables: action.tables.map(x => "data/" + action.source + "/" + x[0])
         })
       })
 
