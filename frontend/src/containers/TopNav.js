@@ -16,7 +16,7 @@ const getNav = (navItems, side) => {
 const mapStateToProps = (state) => {
   return {
     leftNav: getNav(state.topNav, 'TOPNAV_LEFT').map(x => x.shortcut ? Object.assign({}, x, {
-      label: state.tables.find(i => i.index == x.index).label
+      label: state.tables[x.index].label
     }) : x),
     rightNav: getNav(state.topNav, 'TOPNAV_RIGHT')
   }

@@ -38,20 +38,25 @@ export const sources = (state = [], action) => {
 const table = (state, action) => {
   if (action.type == 'TABLE_ADD') {
     return {
-      index: "data/" + action.source + "/" + action.table[0],
       label: action.table[0],
       struct: action.table[1]
     }
   }
 }
 
-export const tables = (state = [], action) => {
+export const tables = (state = {}, action) => {
   switch (action.type) {
     case 'TABLE_ADD':
-      return [...state, table(undefined, action)]
+      return Object.assign({}, state, {
+        ["data/" + action.source + "/" + action.table[0]]: table(undefined, action)
+      })
 
     case 'TABLE_ADD_MULTI':
-      return [].concat(state, action.tables.map(x => table(undefined, {type: 'TABLE_ADD', table: x, source: action.source})))
+      var tables = {}
+      for (var x of action.tables) {
+        tables["data/" + action.source + "/" + x[0]] = table(undefined, {type: 'TABLE_ADD', table: x, source: action.source})
+      }
+      return Object.assign({}, state, tables)
 
     default:
       return state

@@ -10,9 +10,7 @@ const mapStateToProps = (state) => {
   return {
     isVisible: state.topNav.filter(x => x.index == "top-nav-dwata")[0].active,
     sources: state.sources.map(x => { return {index: x.index, label: x.label, active: selectedSource ? x.index === selectedSource.index : false}}),
-    tables: selectedSource ? state.tables.
-      filter(x => selectedSource.tables.findIndex(t => t == x.index) != -1).
-      map(x => { return {index: x.index, label: x.label, active: false} }) : []
+    tables: !selectedSource ? [] : selectedSource.tables.map(x => {return {index: x, label: state.tables[x].label}})
   }
 }
 
