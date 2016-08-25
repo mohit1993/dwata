@@ -8,7 +8,7 @@ const mapStateToProps = (state) => {
   var selectedSource = state.main.selectedSource ? state.sources.filter(x => x.index == state.main.selectedSource)[0] : null
 
   return {
-    isVisible: state.topNav.filter(x => x.index == "top-nav-dwata")[0].active,
+    isVisible: state.topNav["top-nav-dwata"].active,
     sources: state.sources.map(x => { return {index: x.index, label: x.label, active: selectedSource ? x.index === selectedSource.index : false}}),
     tables: !selectedSource ? [] : selectedSource.tables.map(x => {return {index: x, label: state.tables[x].label}})
   }

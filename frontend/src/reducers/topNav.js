@@ -1,41 +1,33 @@
-const firstNavItem = {
-  label: 'Dwata',
-  index: 'top-nav-dwata',
-  meta: null,
-  active: false,
-  side: 'left'
-}
-
-const nav = (state = {}, action) => {
-  switch (action.type) {
-    case 'TOPNAV_ADD':
-      return Object.assign({}, action.nav, {
-        index: action.nav.index,
-        active: action.nav.active != undefined ? action.nav.active : false
-      })
-
-    case 'TOPNAV_CLICK':
-      if (state.index !== action.index) {
-        return state
-      }
-
-      return Object.assign({}, state, {
-        active: !state.active
-      })
-
-    default:
-      return state
+const defaultTopNav = {
+  'top-nav-dwata': {
+    label: 'Dwata',
+    meta: null,
+    active: false,
+    side: 'left'
   }
 }
 
-const topNav = (state = [firstNavItem], action) => {
+const topNav = (state = defaultTopNav, action) => {
   switch (action.type) {
     case 'TOPNAV_ADD':
     case 'SELECT_TABLE':
-      return [...state, nav(undefined, action)]
+      return Object.assign({}, state, {
+        [action.index]: Object.assign({}, action.nav, {
+          active: action.nav && action.nav.active || false
+        })
+      })
 
     case 'TOPNAV_CLICK':
-      return state.map(t => nav(t, action))
+      var newState = {}
+      for (var k in state) {
+        var v = state[k]
+        newState[k] = k != action.index ? Object.assign({}, v, {
+          active: false
+        }) : Object.assign({}, v, {
+          active: true
+        })
+      }
+      return newState
 
     default:
       return state
