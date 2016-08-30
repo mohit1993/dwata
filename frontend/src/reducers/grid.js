@@ -62,4 +62,19 @@ const grid = (state = {heads: [], results: [], ordering: {}, filters: {}, group_
   }
 }
 
-export default grid
+const multiGrid = (state = {}, action) => {
+  switch (action.type) {
+    case 'GRID_SET_HEAD':
+    case 'GRID_SET_RESULT':
+    case 'GRID_CLICK_HEAD':
+    case 'GRID_SET_CELL':
+      return Object.assign({}, state, {
+        [action.selectedTable]: grid(state, action)
+      })
+
+    default:
+      return state
+  }
+}
+
+export default multiGrid

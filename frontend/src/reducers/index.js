@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import topNav from './topNav.js'
 import sideNav from './sideNav.js'
-import grid from './grid.js'
+import multiGrid from './grid.js'
 import { sources, tables } from './schema'
 
 
@@ -14,7 +14,7 @@ const main = (state = {}, action) => {
 
     case 'SELECT_TABLE':
       return Object.assign({}, state, {
-        selectedTab: action.index
+        selectedTable: action.index
       })
 
     default:
@@ -25,7 +25,7 @@ const main = (state = {}, action) => {
 const dwata = combineReducers({
   topNav,
   sideNav,
-  grid,
+  multiGrid,
   main,
   sources,
   tables

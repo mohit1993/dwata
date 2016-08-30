@@ -46,7 +46,8 @@ export const selectTable = () => {
   return (dispatch, getState) => {
     var xhr = new XMLHttpRequest()
     var state = getState()
-    var columnOrder = state.grid.ordering
+    var selectedTab = state.main.selectedTab
+    var columnOrder = (state.multiGrid[selectedTab] && state.multiGrid[selectedTab].ordering) || {}
     var urlParams = []
     if (columnOrder) {
       for (var x in columnOrder) {
@@ -55,7 +56,6 @@ export const selectTable = () => {
         }
       }
     }
-    var selectedTab = state.main.selectedTab
     if (selectedTab.indexOf("data/") != -1) {
       xhr.open("GET", "/api/" + selectedTab + "?" + urlParams.join('&'))
     }
@@ -64,10 +64,12 @@ export const selectTable = () => {
       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
         dispatch({
           type: 'GRID_SET_HEAD',
+          selectedTab: selectedTab,
           heads: xhr.response.keys
         })
         dispatch({
           type: 'GRID_SET_RESULT',
+          selectedTab: selectedTab,
           results: xhr.response.results
         })
       }

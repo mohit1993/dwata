@@ -4,11 +4,19 @@ import { selectTable } from '../actions/index'
 
 
 const mapStateToProps = (state) => {
-  return {
-    heads: state.grid.heads,
-    results: state.grid.results.map(row => row.map(i => typeof i == "string" && i.length > 50 ? i.slice(0, 47) + '...' : i)),
-    ordering: state.grid.ordering,
-    cell: state.grid.cell
+  var grid = state.multiGrid[state.main.selectedTable]
+  if (grid) {
+    return {
+      heads: grid.heads,
+      results: grid.results.map(row => row.map(i => typeof i == "string" && i.length > 50 ? i.slice(0, 47) + '...' : i)),
+      ordering: grid.ordering,
+      cell: grid.cell
+    }
+  } else {
+    return {
+      heads: [],
+      results: []
+    }
   }
 }
 
