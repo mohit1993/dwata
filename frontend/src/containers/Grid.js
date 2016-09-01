@@ -24,7 +24,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onHeadClick: index => {
       dispatch({type: 'GRID_CLICK_HEAD', head: index})
-      dispatch(selectTable(index))
+      dispatch(selectTable())
     },
     onCellClick: (x, y) => {
       dispatch({type: 'GRID_SET_CELL', x: x, y: y})
