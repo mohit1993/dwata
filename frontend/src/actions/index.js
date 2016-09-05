@@ -47,15 +47,20 @@ export const selectTable = () => {
     var xhr = new XMLHttpRequest()
     var state = getState()
     var selectedTable = state.main.selectedTable
-    var columnOrder = (state.multiGrid[selectedTable] && state.multiGrid[selectedTable].ordering) || {}
+    var tableSettings = state.multiGrid[selectedTable] || null
     var urlParams = []
-    if (columnOrder) {
-      for (var x in columnOrder) {
-        if (columnOrder[x] != null) {
-          urlParams.push('order_by=' + x + ':' + columnOrder[x])
+
+    if (tableSettings) {
+      for (var x in tableSettings.ordering) {
+        if (tableSettings.ordering[x] != null) {
+          urlParams.push('order_by=' + x + ':' + tableSettings.ordering[x])
         }
       }
+      if (tableSettings.limit) {
+        urlParams.push('limit=' + tableSettings.limit[0] + ':' + tableSettings.limit[1])
+      }
     }
+
     if (selectedTable.indexOf("data/") != -1) {
       xhr.open("GET", "/api/" + selectedTable + "?" + urlParams.join('&'))
     }

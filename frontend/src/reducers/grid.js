@@ -36,7 +36,9 @@ const gridBody = (state = [], action) => {
   }
 }
 
-const defaultGridData = {heads: [], results: [], ordering: {}, filters: {}, group_by: {}, cell: null, active: false, index: null}
+const defaultGridData = {heads: [], results: [], ordering: {}, filters: {},
+  group_by: {}, cell: null, active: false, index: null, limit: null, page: null
+}
 const grid = (state = defaultGridData, action) => {
   switch (action.type) {
     case 'GRID_SET_HEAD':
