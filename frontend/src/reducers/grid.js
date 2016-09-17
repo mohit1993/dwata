@@ -37,8 +37,8 @@ const gridBody = (state = [], action) => {
 }
 
 const defaultGridData = {heads: [], results: [], ordering: {}, filters: {},
-  group_by: {}, cell: null, active: false, index: null, limit: null, page: null
-}
+  group_by: {}, cell: null, active: false, index: null, count: 0, limit: 100, offset: 0}
+
 const grid = (state = defaultGridData, action) => {
   switch (action.type) {
     case 'GRID_SET_HEAD':
@@ -69,6 +69,16 @@ const grid = (state = defaultGridData, action) => {
     case 'GRID_INIT_TABLE':
       return state
 
+    case 'GRID_SET_META':
+      if (action.meta == 'count' || action.meta == 'limit' || action.meta == 'offset') {
+        // console.log(state, action.meta, action.value, Object.assign({}, state, {[action.meta]: action.value}))
+        // return state
+        return Object.assign({}, state, {
+          [action.meta]: action.value
+        })
+      }
+      return state
+
     default:
       return state
   }
@@ -93,8 +103,9 @@ const multiGrid = (state = {}, action) => {
     case 'GRID_SET_HEAD_AND_RESULT':
       var idx = Object.keys(state).indexOf(action.index)
       var gridData = idx == -1 ? undefined : state[action.index]
-      gridData = grid(gridData, Object.assign({}, action, {type: 'GRID_SET_HEAD'}))
-      gridData = grid(gridData, Object.assign({}, action, {type: 'GRID_SET_RESULT'}))
+      gridData = grid(gridData, {type: 'GRID_SET_HEAD', index: action.index, heads: action.heads})
+      gridData = grid(gridData, {type: 'GRID_SET_RESULT', index: action.index, results: action.results})
+      gridData = grid(gridData, {type: 'GRID_SET_META', meta: 'count', value: action.count})
 
       return Object.assign({}, state, {
         [action.index]: gridData
@@ -111,6 +122,12 @@ const multiGrid = (state = {}, action) => {
         newState[x] = grid(state[x], action)
       }
       return newState
+
+    case 'GRID_SET_META':
+      var active = Object.keys(state).filter(x => state[x].active === true)[0]
+      return Object.assign({}, state, {
+        [active]: grid(state[active], action)
+      })
 
     default:
       return state

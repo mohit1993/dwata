@@ -57,7 +57,10 @@ export const selectTable = () => {
         }
       }
       if (tableSettings.limit) {
-        urlParams.push('limit=' + tableSettings.limit[0] + ':' + tableSettings.limit[1])
+        urlParams.push('limit=' + tableSettings.limit)
+      }
+      if (tableSettings.offset) {
+        urlParams.push('offset=' + tableSettings.offset)
       }
     }
 
@@ -71,7 +74,8 @@ export const selectTable = () => {
           type: 'GRID_SET_HEAD_AND_RESULT',
           index: selectedTable,
           heads: xhr.response.keys,
-          results: xhr.response.results
+          results: xhr.response.results,
+          count: xhr.response.count
         })
       }
     }

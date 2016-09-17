@@ -10,7 +10,10 @@ const mapStateToProps = (state) => {
       heads: grid.heads,
       results: grid.results.map(row => row.map(i => typeof i == "string" && i.length > 50 ? i.slice(0, 47) + '...' : i)),
       ordering: grid.ordering,
-      cell: grid.cell
+      cell: grid.cell,
+      count: grid.count,
+      limit: grid.limit,
+      offset: grid.offset
     }
   } else {
     return {
@@ -28,6 +31,13 @@ const mapDispatchToProps = (dispatch) => {
     },
     onCellClick: (x, y) => {
       dispatch({type: 'GRID_SET_CELL', x: x, y: y})
+    },
+    onLimitChange: limit => {
+      dispatch({type: 'GRID_SET_META', meta: 'limit', value: limit})
+      dispatch(selectTable())
+    },
+    onPageChange: page => {
+      console.log(page)
     }
   }
 }
