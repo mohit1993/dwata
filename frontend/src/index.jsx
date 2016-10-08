@@ -4,8 +4,6 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 
-
-// import { APIHost } from './config.jsx'
 import Dwata from './components/Dwata.jsx'
 import dwata from './reducers'
 import { fetchSources } from './actions'

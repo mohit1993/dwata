@@ -36,8 +36,13 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({type: 'GRID_SET_META', meta: 'limit', value: limit})
       dispatch(selectTable())
     },
-    onPageChange: page => {
-      console.log(page)
+    onScroll: height => {
+      if (window.pageYOffset < height) {
+        if (height - window.pageYOffset < 500) {
+          dispatch({type: 'GRID_INCR_META', meta: 'offset'})
+          dispatch(selectTable())
+        }
+      }
     }
   }
 }

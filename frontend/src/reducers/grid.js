@@ -16,26 +16,6 @@ const gridOperations = (state, action) => {
   }
 }
 
-const gridHead = (state = [], action) => {
-  switch (action.type) {
-    case 'GRID_SET_HEAD':
-      return action.heads
-
-    default:
-      return state
-  }
-}
-
-const gridBody = (state = [], action) => {
-  switch (action.type) {
-    case 'GRID_SET_RESULT':
-      return action.results
-
-    default:
-      return state
-  }
-}
-
 const defaultGridData = {heads: [], results: [], ordering: {}, filters: {},
   group_by: {}, cell: null, active: false, index: null, count: 0, limit: 100, offset: 0}
 
@@ -44,13 +24,13 @@ const grid = (state = defaultGridData, action) => {
     case 'GRID_SET_HEAD':
       return Object.assign({}, state, {
         index: action.index,
-        heads: gridHead(state.heads, action)
+        heads: action.heads
       })
 
     case 'GRID_SET_RESULT':
       return Object.assign({}, state, {
         index: action.index,
-        results: gridBody(state.results, action)
+        results: state.results.concat(action.results)
       })
 
     case 'GRID_CLICK_HEAD':
@@ -75,6 +55,14 @@ const grid = (state = defaultGridData, action) => {
         // return state
         return Object.assign({}, state, {
           [action.meta]: action.value
+        })
+      }
+      return state
+
+    case 'GRID_INCR_META':
+      if (action.meta == 'offset') {
+        return Object.assign({}, state, {
+          offset: state.offset + state.limit
         })
       }
       return state
@@ -124,6 +112,12 @@ const multiGrid = (state = {}, action) => {
       return newState
 
     case 'GRID_SET_META':
+      var active = Object.keys(state).filter(x => state[x].active === true)[0]
+      return Object.assign({}, state, {
+        [active]: grid(state[active], action)
+      })
+
+    case 'GRID_INCR_META':
       var active = Object.keys(state).filter(x => state[x].active === true)[0]
       return Object.assign({}, state, {
         [active]: grid(state[active], action)
