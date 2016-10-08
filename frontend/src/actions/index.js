@@ -51,6 +51,9 @@ export const selectTable = () => {
     var urlParams = []
 
     if (tableSettings) {
+      if (tableSettings.ajaxLoading) {
+        return
+      }
       for (var x in tableSettings.ordering) {
         if (tableSettings.ordering[x] != null) {
           urlParams.push('order_by=' + x + ':' + tableSettings.ordering[x])
@@ -79,6 +82,11 @@ export const selectTable = () => {
         })
       }
     }
+    dispatch({
+      type: 'GRID_SET_META',
+      meta: 'ajaxLoading',
+      value: true
+    })
     xhr.send();
   }
 }

@@ -17,7 +17,8 @@ const gridOperations = (state, action) => {
 }
 
 const defaultGridData = {heads: [], results: [], ordering: {}, filters: {},
-  group_by: {}, cell: null, active: false, index: null, count: 0, limit: 100, offset: 0}
+  group_by: {}, cell: null, active: false, index: null, count: 0, limit: 100, offset: 0,
+  willRequestPage: false, ajaxLoading: false}
 
 const grid = (state = defaultGridData, action) => {
   switch (action.type) {
@@ -30,7 +31,9 @@ const grid = (state = defaultGridData, action) => {
     case 'GRID_SET_RESULT':
       return Object.assign({}, state, {
         index: action.index,
-        results: state.results.concat(action.results)
+        results: state.results.concat(action.results),
+        willRequestPage: false,
+        ajaxLoading: false
       })
 
     case 'GRID_CLICK_HEAD':
@@ -50,7 +53,8 @@ const grid = (state = defaultGridData, action) => {
       return state
 
     case 'GRID_SET_META':
-      if (action.meta == 'count' || action.meta == 'limit' || action.meta == 'offset') {
+      if (action.meta == 'count' || action.meta == 'limit' || action.meta == 'offset'
+        || action.meta == 'willRequestPage' || action.meta == 'ajaxLoading') {
         // console.log(state, action.meta, action.value, Object.assign({}, state, {[action.meta]: action.value}))
         // return state
         return Object.assign({}, state, {
@@ -60,9 +64,10 @@ const grid = (state = defaultGridData, action) => {
       return state
 
     case 'GRID_INCR_META':
-      if (action.meta == 'offset') {
+      if (action.meta == 'offset' && !state.willRequestPage) {
         return Object.assign({}, state, {
-          offset: state.offset + state.limit
+          offset: state.offset + state.limit,
+          willRequestPage: true
         })
       }
       return state

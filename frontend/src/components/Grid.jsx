@@ -3,14 +3,14 @@ import React, { PropTypes } from 'react'
 
 const GridDash = ({ cell, limit, onLimitChange }) => (<div id="grid-dash">
   { cell ? <div className="cell-data">{cell}</div> : null }
-  { /* <div className="grid-limit">Limit <select onChange={e => onLimitChange(e.target.value)} value={limit}>
+  { <div className="grid-limit">Limit <select onChange={e => onLimitChange(e.target.value)} value={limit}>
     <option value="100">100</option>
     <option value="300">300</option>
     <option value="600">600</option>
     <option value="1000">1000</option>
     <option value="3000">3000</option>
     <option value="6000">6000</option>
-  </select></div> */ }
+  </select></div> }
 </div>)
 
 const GridPagination = ({ count, limit, offset, onPageChange }) => {
