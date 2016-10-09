@@ -4,7 +4,7 @@ import { selectSource, selectTable } from '../actions/index.js'
 
 
 const mapStateToProps = (state) => {
-  var filtered = state.sideNav.sources ? state.sideNav.sources.filter(x => x.active) : null
+  // The main state stores the currently selected data source
   var selectedSource = state.main.selectedSource ? state.sources.filter(x => x.index == state.main.selectedSource)[0] : null
 
   return {
@@ -17,11 +17,16 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onSelect: index => {
+      // When the user selects a data source, we store this in the main state.
+      // Refer to the main reducer in reducers/index.js
       dispatch({type: 'SELECT_SOURCE', index: index})
-      dispatch(selectSource(index))
+      dispatch(selectSource())
     },
     onClick: index => {
+      // When user selects a table, we store this in the main state.
+      // Refer to the main reducer in reducers/index.js
       dispatch({type: 'SELECT_TABLE', index: index})
+      // Each selected table is added to the top navigation as a shortcut.
       dispatch({
         type: 'TOPNAV_ADD',
         nav: {
