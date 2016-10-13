@@ -41,6 +41,9 @@ const mapDispatchToProps = (dispatch) => {
         dispatch({type: 'GRID_INCR_META', meta: 'offset'})
         dispatch(selectTable())
       }
+    },
+    onRowDoubleClick: x => {
+      dispatch({type: 'GRID_SELECT_ROW', x: x})
     }
   }
 }

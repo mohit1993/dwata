@@ -16,9 +16,9 @@ const gridOperations = (state, action) => {
   }
 }
 
-const defaultGridData = {heads: [], results: [], ordering: {}, filters: {},
+const defaultGridData = { heads: [], results: [], ordering: {}, filters: {},
   group_by: {}, cell: null, active: false, index: null, count: 0, limit: 100, offset: 0,
-  willRequestPage: false, ajaxLoading: false}
+  willRequestPage: false, ajaxLoading: false, selectedRow: null }
 
 const grid = (state = defaultGridData, action) => {
   switch (action.type) {
@@ -42,6 +42,11 @@ const grid = (state = defaultGridData, action) => {
     case 'GRID_SET_CELL':
       return Object.assign({}, state, {
         cell: state.results[action.x][action.y]
+      })
+
+    case 'GRID_SELECT_ROW':
+      return Object.assign({}, state, {
+        selectedRow: action.x
       })
 
     case 'SELECT_TABLE':
@@ -88,6 +93,7 @@ const multiGrid = (state = {}, action) => {
 
     case 'GRID_CLICK_HEAD':
     case 'GRID_SET_CELL':
+    case 'GRID_SELECT_ROW':
       var active = Object.keys(state).filter(x => state[x].active === true)[0]
       return Object.assign({}, state, {
         [active]: grid(state[active], action)

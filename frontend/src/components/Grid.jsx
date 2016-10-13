@@ -33,15 +33,15 @@ const GridPagination = ({ count, limit, offset, onPageChange }) => {
   </div>)
 }
 
-const GridRow = ({ rowID, row, onClick }) => (<tr>
-  { row.map((col, i) => <td key={i} onClick={() => onClick(rowID, i)}>{col}</td>) }
+const GridRow = ({ rowID, row, onClick, onDoubleClick }) => (<tr>
+  { row.map((col, i) => <td key={i} onClick={() => onClick(rowID, i)} onDoubleClick={() => onDoubleClick(rowID)}>{col}</td>) }
 </tr>)
 
 class Grid extends React.Component {
   constructor(heads, results, onHeadClick, ordering, cell, onCellClick, count, limit,
-    offset, onLimitChange, onPageChange, onScroll) {
+    offset, onLimitChange, onPageChange, onScroll, onRowDoubleClick) {
     super(heads, results, onHeadClick, ordering, cell, onCellClick, count, limit,
-      offset, onLimitChange, onPageChange, onScroll)
+      offset, onLimitChange, onPageChange, onScroll, onRowDoubleClick)
     this.onScroll = this.onScroll.bind(this)
   }
 
@@ -55,7 +55,7 @@ class Grid extends React.Component {
 
   render() {
     var { heads, results, onHeadClick, ordering, cell, onCellClick, count, limit,
-      offset, onLimitChange, onPageChange, onScroll } = this.props;
+      offset, onLimitChange, onPageChange, onScroll, onRowDoubleClick } = this.props;
     return (<div className="grid-cont">
       { heads.length ? <GridDash cell={cell} heads={heads} limit={limit} onLimitChange={onLimitChange} /> : null }
       <table className="grid" id="grid-table" ref={(c) => this._table = c}>
@@ -63,7 +63,7 @@ class Grid extends React.Component {
           { heads.map((item, i) => <th key={i} onClick={() => onHeadClick(item)}
             className={ordering[item]}>{item}</th>) }
         </tr></thead>
-        <tbody>{ results.map((row, i) => <GridRow rowID={i} row={row} key={i} onClick={onCellClick} />) }</tbody>
+        <tbody>{ results.map((row, i) => <GridRow rowID={i} row={row} key={i} onClick={onCellClick} onDoubleClick={onRowDoubleClick} />) }</tbody>
       </table>
       { heads.length ? <GridPagination count={count} limit={limit} offset={offset} onPageChange={onPageChange} /> : null }
     </div>)

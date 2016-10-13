@@ -3,6 +3,7 @@ import React from 'react'
 import TopNav from '../containers/TopNav.js'
 import SideNav from '../containers/SideNav.js'
 import Grid from '../containers/Grid.js'
+import DetailView from '../containers/DetailView.js'
 
 
 // import Grid from './views/grid.jsx'
@@ -152,6 +153,7 @@ const Dwata = () => (<div>
   <TopNav />
   <SideNav />
   <Grid />
+  <DetailView />
 </div>)
 
 export default Dwata

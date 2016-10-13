@@ -2,6 +2,7 @@ $primary-text-color: #454545
 $navbar-border-color: #dedede
 $grid-border-color: #dedede
 
+
 body
   font-family: 'Lato', sans-serif
   font-size: 14px
@@ -178,11 +179,12 @@ table.grid
         border-right: 1px solid $grid-border-color
         cursor: default
 
-        &:hover
-          background-color: #efefef
-
         &:last-child
           border-right: 0
+
+      &:hover
+        background-color: #efefef
+
 
 #query-box
   width: 100%
@@ -259,3 +261,21 @@ table.grid
         background: #4caf50
         color: #fff
         border-color: #4caf50
+
+.detail-view
+  padding: 16px
+  z-index: 2
+  position: absolute
+  top: 100px
+  left: 200px
+  background: #EFEFEF
+  box-shadow: 1px 1px 2px #cecece
+  border-radius: 6px
+
+  .col
+    label
+      color: #9A9A9A
+      display: block
+
+    input
+      padding: 4px

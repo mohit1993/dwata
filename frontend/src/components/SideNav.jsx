@@ -19,8 +19,8 @@ const SideNav = ({ sources, isVisible, onSelect, tables, onClick }) => (<div id=
       </select></div>
       : null }
     { sources.length == 1 ?
-      <div className="el-cont"><select id="select-source" onChange={e => {onSelect(e.target.value)}} className="form-input" disabled>
-        { sources.map((nav, i) => <option value={nav.index} key={i} selected>{nav.label}</option>) }
+      <div className="el-cont"><select id="select-source" onChange={e => {onSelect(e.target.value)}} className="form-input" disabled defaultValue={sources[0].index}>
+        { sources.map((nav, i) => <option value={nav.index} key={i}>{nav.label}</option>) }
       </select></div>
       : null }
   </div>
