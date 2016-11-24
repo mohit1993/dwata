@@ -63,7 +63,7 @@ export const selectTable = () => {
     var urlParams = []
 
     if (tableSettings) {
-      if (tableSettings.ajaxLoading) {
+      if (tableSettings.ajaxLoading || tableSettings.hasSynced) {
         return
       }
       for (var x in tableSettings.ordering) {

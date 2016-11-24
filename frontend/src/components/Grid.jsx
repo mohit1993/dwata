@@ -46,10 +46,15 @@ class Grid extends React.Component {
   }
 
   onScroll() {
+    // In this scroll handler, we call our `onScroll` that was passed in to our Grid component.
+    // Remember the `onScroll` method of this `Grid` class is different from the method that was passed to
+    // this class as prop.
+    // We pass the height of the grid table
     this.props.onScroll(this._table.offsetHeight)
   }
 
   componentDidUpdate() {
+    // When this component has mounted we set a scroll handler
     window.addEventListener('scroll', this.onScroll)
   }
 
@@ -65,7 +70,7 @@ class Grid extends React.Component {
         </tr></thead>
         <tbody>{ results.map((row, i) => <GridRow rowID={i} row={row} key={i} onClick={onCellClick} onDoubleClick={onRowDoubleClick} />) }</tbody>
       </table>
-      { heads.length ? <GridPagination count={count} limit={limit} offset={offset} onPageChange={onPageChange} /> : null }
+      {/* heads.length ? <GridPagination count={count} limit={limit} offset={offset} onPageChange={onPageChange} /> : null */}
     </div>)
   }
 }

@@ -4,7 +4,7 @@ import DetailViewComponent from '../components/DetailView.jsx'
 
 const mapStateToProps = state => {
   var grid = state.multiGrid[state.main.selectedTable]
-  if (grid && grid.selectedRow) {
+  if (grid && grid.selectedRow != null) {
     return {
       heads: grid.heads,
       row: grid.results[grid.selectedRow],

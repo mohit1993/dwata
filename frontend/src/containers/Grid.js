@@ -37,7 +37,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(selectTable())
     },
     onScroll: height => {
-      if (window.pageYOffset < height && window.pageYOffset > height/1.35) {
+      // The height of the Grid table is fixed once it has loaded the data.
+      // When the scroll offset is very close to the Grid height it means we have scrolled the bottom of the Grid.
+      console.log(window.pageYOffset, height)
+      if (window.pageYOffset < height && window.pageYOffset > height - 150) {
         dispatch({type: 'GRID_INCR_META', meta: 'offset'})
         dispatch(selectTable())
       }

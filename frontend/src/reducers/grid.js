@@ -18,7 +18,7 @@ const gridOperations = (state, action) => {
 
 const defaultGridData = { heads: [], results: [], ordering: {}, filters: {},
   group_by: {}, cell: null, active: false, index: null, count: 0, limit: 100, offset: 0,
-  willRequestPage: false, ajaxLoading: false, selectedRow: null }
+  ajaxLoading: false, selectedRow: null, hasSynced: false }
 
 const grid = (state = defaultGridData, action) => {
   switch (action.type) {
@@ -32,8 +32,23 @@ const grid = (state = defaultGridData, action) => {
       return Object.assign({}, state, {
         index: action.index,
         results: state.results.concat(action.results),
-        willRequestPage: false,
-        ajaxLoading: false
+        ajaxLoading: false,
+        hasSynced: true
+      })
+
+    case 'GRID_RESET':
+      return Object.assign({}, state, {
+        heads: [],
+        results: [],
+        ordering: {},
+        filters: {},
+        group_by: {},
+        cell: null,
+        count: 0,
+        limit: 100,
+        offset: 0,
+        selectedRow: null,
+        hasSynced: false
       })
 
     case 'GRID_CLICK_HEAD':
@@ -58,10 +73,12 @@ const grid = (state = defaultGridData, action) => {
       return state
 
     case 'GRID_SET_META':
-      if (action.meta == 'count' || action.meta == 'limit' || action.meta == 'offset'
-        || action.meta == 'willRequestPage' || action.meta == 'ajaxLoading') {
-        // console.log(state, action.meta, action.value, Object.assign({}, state, {[action.meta]: action.value}))
-        // return state
+      if (action.meta == 'limit' || action.meta == 'offset') {
+        return Object.assign({}, state, {
+          [action.meta]: action.value,
+          hasSynced: false
+        })
+      } else if (action.meta == 'ajaxLoading' || action.meta == 'count' ) {
         return Object.assign({}, state, {
           [action.meta]: action.value
         })
@@ -69,10 +86,10 @@ const grid = (state = defaultGridData, action) => {
       return state
 
     case 'GRID_INCR_META':
-      if (action.meta == 'offset' && !state.willRequestPage) {
+      if (action.meta == 'offset') {
         return Object.assign({}, state, {
           offset: state.offset + state.limit,
-          willRequestPage: true
+          hasSynced: false
         })
       }
       return state
