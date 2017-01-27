@@ -1,4 +1,5 @@
-import json
+import tornado.web
+import simplejson as json
 import datetime
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, select, func
@@ -6,9 +7,8 @@ from sqlalchemy import create_engine, MetaData, select, func
 from common.config import extract_config
 
 
-class ReadHandler(object):
-    @staticmethod
-    def on_get(request, response, source, table):
+class ReadHandler(tornado.web.RequestHandler):
+    def get(self, source, table):
         databases = extract_config()
 
         if source in databases:
@@ -16,16 +16,15 @@ class ReadHandler(object):
             conn = engine.connect()
             meta = MetaData(bind=engine)
             meta.reflect()
-            rp = request.params
             if table in meta.tables:
                 tt = meta.tables[table]
                 first_column = tt.columns[tt.columns.keys()[0]]
                 sel = dict(
                     columns=[tt],
-                    limit=rp.get('limit', 100)
+                    limit=self.get_query_argument('limit', 100)
                 )
-                if 'order_by' in rp:
-                    order_by = rp['order_by']
+                if self.get_query_argument('order_by', None):
+                    order_by = self.get_query_argument('order_by')
                     order_by = [order_by, ] if type(order_by) is str else order_by
                     valid_order_by = list()
                     for x in order_by:
@@ -41,7 +40,7 @@ class ReadHandler(object):
                 count_sel = sel.copy()
                 count_sel['columns'] = [func.count(first_column)]
                 del count_sel['limit']
-                response.body = json.dumps(
+                self.write(json.dumps(
                     dict(
                         keys=exc.keys(),
                         results=exc.cursor.fetchall(),
@@ -49,6 +48,7 @@ class ReadHandler(object):
                     ),
                     default=lambda obj: obj.isoformat()
                     if (isinstance(obj, datetime.datetime) or
-                        isinstance(obj, datetime.date)) else None)
-                response.set_header('Content-type', 'application/javascript')
+                        isinstance(obj, datetime.date)) else None
+                ))
+                self.add_header('Content-type', 'application/javascript')
             conn.close()

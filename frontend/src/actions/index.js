@@ -80,7 +80,7 @@ export const selectTable = () => {
     }
 
     if (selectedTable.indexOf("data/") != -1) {
-      xhr.open("GET", "/api/" + selectedTable + "?" + urlParams.join('&'))
+      xhr.open("GET", "/api/" + selectedTable + "/?" + urlParams.join('&'))
     }
     xhr.responseType = "json"
     xhr.onreadystatechange = () => {

@@ -62,7 +62,7 @@ class Grid extends React.Component {
     var { heads, results, onHeadClick, ordering, cell, onCellClick, count, limit,
       offset, onLimitChange, onPageChange, onScroll, onRowDoubleClick } = this.props;
     return (<div className="grid-cont">
-      { heads.length ? <GridDash cell={cell} heads={heads} limit={limit} onLimitChange={onLimitChange} /> : null }
+      { heads.length ? <GridDash cell={cell} limit={limit} onLimitChange={onLimitChange} /> : null }
       <table className="grid" id="grid-table" ref={(c) => this._table = c}>
         <thead><tr>
           { heads.map((item, i) => <th key={i} onClick={() => onHeadClick(item)}

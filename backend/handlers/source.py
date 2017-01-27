@@ -1,12 +1,12 @@
-import json
-from urllib.parse import urlparse
+import simplejson as json
+import tornado.web
+from urllib.parse import urlparse, quote
 
 from common.config import extract_config
 
 
-class SourceHandler(object):
-    @staticmethod
-    def on_get(request, response):
+class SourceHandler(tornado.web.RequestHandler):
+    def get(self):
         config = list()
         databases = extract_config()
         if not databases:
@@ -14,12 +14,13 @@ class SourceHandler(object):
 
         for _id, x in databases.items():
             url = urlparse(x)
-            config.append((_id, dict(
+            config.append((quote(_id, safe=''), dict(
+                label=_id,
                 user=url.netloc[:url.netloc.find(':')],
                 host=url.netloc[url.netloc.find('@') + 1:],
                 database=url.path[1:]
             )))
         config = sorted(config, key=lambda x: x[0])
 
-        response.body = json.dumps(config)
-        response.set_header('Content-type', 'application/javascript')
+        self.write(json.dumps(config))
+        self.add_header('Content-type', 'application/javascript')

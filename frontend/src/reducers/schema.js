@@ -3,7 +3,7 @@ const source = (state, action) => {
     case 'SOURCE_ADD':
       return {
         index: action.source[0],
-        label: action.source[0],
+        label: action.source[1].label,
         info: action.source[1],
         tables: []
       }

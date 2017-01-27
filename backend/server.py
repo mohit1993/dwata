@@ -1,32 +1,38 @@
-import falcon
-from wsgiref import simple_server
+import os
+import tornado.ioloop
+import tornado.web
 
 import settings
-from handlers.static import HomepageHandler, assets_handler
+from handlers.static import HomepageHandler
 from handlers.source import SourceHandler
 from handlers.schema import SchemaHandler
 from handlers.read import ReadHandler
 from handlers.query import QueryHandler
 
 
-api = falcon.API()
+tornado_app_settings = {
+    "static_path": os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "static")),
+    "autoreload": True
+}
 
-api.add_route('/', HomepageHandler())
-api.add_sink(assets_handler, prefix=r'/asset/')
-api.add_route('/api/source/', SourceHandler())
-
-api.add_route('/api/schema/{source}/', SchemaHandler())
-api.add_route('/api/data/{source}/{table}/', ReadHandler())
-api.add_route('/api/query/{source}/', QueryHandler())
-# api.add_route('/schema/alter/', )
-#
-# api.add_route('/op/select/', )
-# api.add_route('/op/insert/', )
-# api.add_route('/op/update/', )
-# api.add_route('/op/delete/', )
+handlers = [
+    (r"/", HomepageHandler),
+    (r"/api/source/", SourceHandler),
+    (r"/api/schema/([^/]+)/", SchemaHandler),
+    (r"/api/data/([^/]+)/([^/]+)/", ReadHandler),
+    (r"/api/query/{source}/", QueryHandler)
+]
 
 
-if __name__ == '__main__':
-    httpd = simple_server.make_server(settings.SERVER_HOST, settings.SERVER_PORT, api)
-    print("Server started, you may open http://%s:%s/ on your browser" % (settings.SERVER_HOST, settings.SERVER_PORT))
-    httpd.serve_forever()
+def make_app():
+    return tornado.web.Application(handlers=handlers, **tornado_app_settings)
+
+# app.add_sink(assets_handler, prefix=r"/asset/")
+
+
+if __name__ == "__main__":
+    app = make_app()
+    print("Server started")
+    print("Please open http://%s:%s/ on your browser" % (settings.SERVER_HOST, settings.SERVER_PORT))
+    app.listen(port=settings.SERVER_PORT, address=settings.SERVER_HOST)
+    tornado.ioloop.IOLoop.current().start()
