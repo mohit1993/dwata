@@ -1,5 +1,5 @@
 import tornado.web
-import simplejson as json
+import ujson as json
 import datetime
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, select, func

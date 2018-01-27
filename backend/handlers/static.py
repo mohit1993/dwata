@@ -1,7 +1,7 @@
 import os
 import tornado.web
 
-import settings
+from base import settings
 
 
 class HomepageHandler(tornado.web.RequestHandler):

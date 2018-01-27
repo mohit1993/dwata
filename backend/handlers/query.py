@@ -1,4 +1,4 @@
-import json
+import ujson as json
 import datetime
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, select

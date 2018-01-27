@@ -1,5 +1,5 @@
 import tornado.web
-import simplejson as json
+import ujson as json
 from sqlalchemy import create_engine, MetaData
 
 from common.config import extract_config

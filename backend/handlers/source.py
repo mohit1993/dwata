@@ -1,4 +1,4 @@
-import simplejson as json
+import ujson as json
 import tornado.web
 from urllib.parse import urlparse, quote
 
