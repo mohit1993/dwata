@@ -2,7 +2,7 @@ import os
 import tornado.ioloop
 import tornado.web
 
-from base import settings
+from base.settings import settings
 from handlers.static import HomepageHandler
 from handlers.source import SourceHandler
 from handlers.schema import SchemaHandler

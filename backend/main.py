@@ -14,7 +14,6 @@ def testconnect(args):
 
 
 if __name__ == '__main__':
-    from apps import app
     parser = argparse.ArgumentParser(description="Dwata backend")
     parser.add_argument(
         "action",

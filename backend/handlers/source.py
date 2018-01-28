@@ -2,13 +2,14 @@ import ujson as json
 import tornado.web
 from urllib.parse import urlparse, quote
 
-from common.config import extract_config
+from base.settings import settings
 
 
 class SourceHandler(tornado.web.RequestHandler):
     def get(self):
         config = list()
-        databases = extract_config()
+        databases = settings.databases
+
         if not databases:
             return False
 
@@ -16,7 +17,6 @@ class SourceHandler(tornado.web.RequestHandler):
             url = urlparse(x)
             config.append((quote(_id, safe=''), dict(
                 label=_id,
-                user=url.netloc[:url.netloc.find(':')],
                 host=url.netloc[url.netloc.find('@') + 1:],
                 database=url.path[1:]
             )))

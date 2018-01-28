@@ -2,12 +2,12 @@ import tornado.web
 import ujson as json
 from sqlalchemy import create_engine, MetaData
 
-from common.config import extract_config
+from base.settings import settings
 
 
 class SchemaHandler(tornado.web.RequestHandler):
     def get(self, source):
-        databases = extract_config()
+        databases = settings.databases
 
         if source in databases:
             engine = create_engine(databases[source])

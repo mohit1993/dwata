@@ -3,13 +3,13 @@ import datetime
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, select
 
-from common.config import extract_config
+from base.settings import settings
 
 
 class QueryHandler(object):
     @staticmethod
     def on_post(request, response, source):
-        databases = extract_config()
+        databases = settings.databases
 
         if source in databases:
             engine = create_engine(databases[source])

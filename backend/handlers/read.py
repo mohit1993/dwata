@@ -4,12 +4,12 @@ import datetime
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, select, func
 
-from common.config import extract_config
+from base.settings import settings
 
 
 class ReadHandler(tornado.web.RequestHandler):
     def get(self, source, table):
-        databases = extract_config()
+        databases = settings.databases
 
         if source in databases:
             engine = create_engine(databases[source])
