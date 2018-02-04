@@ -45,10 +45,7 @@ class ReadHandler(tornado.web.RequestHandler):
                         keys=exc.keys(),
                         results=exc.cursor.fetchall(),
                         count=conn.execute(select(**count_sel)).scalar()
-                    ),
-                    default=lambda obj: obj.isoformat()
-                    if (isinstance(obj, datetime.datetime) or
-                        isinstance(obj, datetime.date)) else None
+                    )
                 ))
                 self.add_header('Content-type', 'application/javascript')
             conn.close()

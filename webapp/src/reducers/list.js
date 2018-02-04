@@ -1,7 +1,8 @@
 import Immutable, { fromJS } from 'immutable';
+import moment from 'moment';
 
 import * as constants from 'base/constants';
-import { filterByEntity } from 'base/common';
+import { filterByEntity, filterByEntityAndSearchPath } from 'base/common';
 
 
 const defaultListEntry = Immutable.Map({
@@ -11,7 +12,8 @@ const defaultListEntry = Immutable.Map({
   data: Immutable.List([]),
 
   _isFetching: false,
-  _isReady: false
+  _isReady: false,
+  _lastFetchedAt: undefined
 });
 
 
@@ -29,17 +31,25 @@ const listEntry = (state = defaultListEntry, action) => {
     case constants.STORE_LIST_FETCH_INIT:
       return state.merge({
         _isFetching: true,
+        _isReady: false
       });
 
     case constants.STORE_LIST_FETCH_SUCCESS:
       // Assumes a plain JS list in action.payload, probably from AJAX response
       return state.merge({
-        data: fromJS(action.payload)
+        data: fromJS(action.payload),
+
+        _isFetching: false,
+        _isReady: true,
+        _lastFetchedAt: moment.utc()
       });
 
     case constants.STORE_LIST_UPDATE:
       // Assumes an Immutable.List in action.payload
       return state;
+
+    case constants.STORE_LIST_SELECT_ITEM:
+      return state.get('data').map(x => x.id === action.id ? x.set('_isSelected', true) : x)
 
     default:
       return state
@@ -48,8 +58,10 @@ const listEntry = (state = defaultListEntry, action) => {
 
 
 const findIndex = (state, action) => {
-  if (!action.searchPath) {
+  if (action.searchPath === undefined) {
     return state.findIndex(filterByEntity(action.entity));
+  } else {
+    return state.findIndex(filterByEntityAndSearchPath(action.entity, action.searchPath));
   }
 }
 
@@ -71,7 +83,36 @@ export default (state = Immutable.List([]), action) => {
       // Assumes an Immutable.List in action.payload
       return state;
 
+    case constants.STORE_LIST_SELECT_ITEM:
+      return state.update(findIndex(state, action), x => listEntry(x, action));
+
     default:
       return state
   }
 }
+
+
+// export default (state = Immutable.List([]), action) => {
+//   switch (action.type) {
+//     case constants.STORE_LIST_INIT:
+//       // Assumes an Immutable.List in action.payload
+//       return state.push(action.entity, listEntry(undefined, action));
+
+//     case constants.STORE_LIST_FETCH_INIT:
+//       return state.update(action.entity, x => listEntry(x, action));
+
+//     case constants.STORE_LIST_FETCH_SUCCESS:
+//       // Assumes a plain JS list in action.payload, probably from AJAX response
+//       return state.update(action.entity, x => listEntry(x, action));
+
+//     case constants.STORE_LIST_UPDATE:
+//       // Assumes an Immutable.List in action.payload
+//       return state;
+
+//     case constants.STORE_LIST_SELECT_ITEM:
+//       return state.update(action.entity, x => listEntry(x, action));
+
+//     default:
+//       return state
+//   }
+// }

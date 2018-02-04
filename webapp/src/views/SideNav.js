@@ -1,41 +1,38 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-import * as constants from 'base/constants';
-import defaultContainer from 'base/container';
-import NavBarView from './NavBar';
+import Immutable from 'immutable';
 
 
-const Tables = defaultContainer(({ dataList, onClick }) => <div>
-  { dataList.size ?
-    <div><div className="head">Tables</div>
-    <ul className="list">{ dataList.map((nav, i) => (<NavBarView
-      key={i} {...nav} onClick={e => { e.preventDefault(); onClick(nav.index)}} />)) }</ul></div>
-    : null }
-</div>, { entity: constants.ENTITY_TYPE_TABLE , mode: constants.CONTAINER_MODE_LIST });
+export class TablesView extends React.PureComponent {
+  render() {
+    let { dataList, onClick } = this.props;
+    dataList = dataList.get('data', Immutable.List([])).toJS();
+
+    return <div>
+      <h5>Tables ({ dataList.length })</h5>
+      <div className="list-group">
+        { dataList.map((nav, i) => <a href={ `/schema/${nav[0]}/` } key={ `dt-src-${i}` }
+          className="list-group-item list-group-item-action" onClick={ e => this.props.onSelect(e, nav) }>{ nav[0] }</a>) }
+      </div>
+    </div>;
+  }
+}
 
 
-const Sources = defaultContainer(({ dataList, onClick }) => {
-    dataList = dataList.toJS();
+export class SourcesView extends React.PureComponent {
+  componentWillMount() {
+    this.props.onMount();
+  }
+
+  render() {
+    let { dataList, onSelect } = this.props;
+    dataList = dataList.get('data', Immutable.List([])).toJS();
 
     return <div className="data-sources">
       <h5>Data sources ({ dataList.length })</h5>
       <div className="list-group">
-        { dataList.map((nav, i) => <Link to={ `/source/${nav[0]}/` } key={ `dt-src-${i}` } className="list-group-item list-group-item-action">{ nav[1].database }</Link>) }
+        { dataList.map((nav, i) => <a href={ `/source/${nav[0]}/` } key={ `dt-src-${i}` }
+          className="list-group-item list-group-item-action" onClick={ e => this.props.onSelect(e, nav) }>{ nav[1].database }</a>) }
       </div>
-    </div>
-  },
-  { entity: constants.ENTITY_TYPE_DATA_SOURCE, mode: constants.CONTAINER_MODE_LIST }
-);
-
-
-export default defaultContainer(({ dataItem, onClick }) => {
-    // let { isVisible } = dataItem.toJS();
-
-    return <div>
-      <Sources />
-      <Tables />
-    </div>
-  },
-  { entity: constants.ENTITY_TYPE_SIDENAV, mode: constants.CONTAINER_MODE_ITEM }
-);
+    </div>;
+  }
+}

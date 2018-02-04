@@ -1,29 +1,36 @@
+import Immutable from 'immutable';
+
 import * as constants from './constants';
 
 
-export const fakeUUID = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-  });
+// Only filter by entity, not searchPath
+export const filterByEntity = entity => item =>
+  item.get('entity') === entity && item.get('searchPath') === undefined;
+
+
+// Filter by entity and searchPath (like entity COMMENTS with searchPath `product/123`)
+export const filterByEntityAndSearchPath = (entity, searchPath) => item =>
+  item.get('entity') === entity && item.get('searchPath') === searchPath;
+
+
+export const getFromList = (state, entity, searchPath) => {
+  let list = state.get('list');
+  if (searchPath === undefined) {
+    return list.find(filterByEntity(entity), undefined, Immutable.Map({}));
+  } else {
+    return list.find(filterByEntityAndSearchPath(entity, searchPath), undefined, Immutable.Map({}));
+  }
 }
 
 
-export const filterByEntity = (entity) => {
-  // If there is a searchPath, then use that to filter instead
-  return (item) => item.get('entity') === entity && !item.get('searchPath')
-}
-
-
-// parent is like a URL, example `job/12` or `user/12`
-export const filterByEntityAndParent = (entity, parent) => {
-  return (item) => item.entity === entity && item.parent === parent
-}
+export const selectedInList = (entity, select='_isSelected') => (state) =>
+  state.getIn(['list', entity]).find(x => x.get(select, false) === true);
 
 
 export const getDataFromState = (state, filters) => {
   if (!state) return state
-  let index = state.findIndex(filterByEntityAndParent(filters.entity, filters.parent));
+  let index = state.findIndex(filterByEntityAndSearchPath(filters.entity, filters.searchPath));
+
   if (index !== -1) {
     let data = state[index].data;
     for (let i = 0; i < data.length; i++) {

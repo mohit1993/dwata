@@ -8,7 +8,6 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import reducers from 'reducers';
-import historyListener from 'actions/history';
 import setDefaults from 'base/defaults';
 
 
@@ -17,9 +16,7 @@ const store = createStore(
   applyMiddleware(thunkMiddleware)
 );
 
-historyListener(store);
 setDefaults(store);
-
 
 ReactDOM.render(
   <Provider store={store}>
