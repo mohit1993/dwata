@@ -43,7 +43,7 @@ const GridRow = ({ rowID, row, onClick, onDoubleClick }) => (<tr>
 </tr>)
 
 
-class Grid extends React.PureComponent {
+export class GridView extends React.PureComponent {
   componentWillMount() {
     this.onScroll = this.onScroll.bind(this);
   }
@@ -62,16 +62,18 @@ class Grid extends React.PureComponent {
   }
 
   render() {
-    if (this.props.heads) {
-      let { heads, results, onHeadClick, ordering, cell, onCellClick, count, limit,
+    if (this.props) {
+      let { heads, results, onHeadClick, cell, onCellClick, count, limit,
         offset, onLimitChange, onPageChange, onScroll, onRowDoubleClick } = this.props;
 
+      heads = heads.toJS();
+      results = results.toJS();
+
       return (<div className="grid-cont">
-        { heads.size ? <GridDash cell={cell} limit={limit} onLimitChange={onLimitChange} /> : null }
+        { heads.length ? <GridDash cell={ cell } limit={ limit } onLimitChange={onLimitChange} /> : null }
         <table className="grid" id="grid-table" ref={(c) => this._table = c}>
           <thead><tr>
-            { heads.map((item, i) => <th key={i} onClick={() => onHeadClick(item)}
-              className={ordering[item]}>{item}</th>) }
+            { heads.map((item, i) => <th key={i} onClick={ _ => onHeadClick(item) }>{ item }</th>) }
           </tr></thead>
           <tbody>{ results.map((row, i) => <GridRow rowID={i} row={row} key={i} onClick={onCellClick} onDoubleClick={onRowDoubleClick} />) }</tbody>
         </table>
@@ -82,6 +84,3 @@ class Grid extends React.PureComponent {
     }
   }
 }
-
-
-export default defaultContainer(Grid, { entity: constants.ENTITY_TYPE_GRID, mode: constants.CONTAINER_MODE_ITEM });

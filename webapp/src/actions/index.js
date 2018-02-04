@@ -1,7 +1,8 @@
-import history from './history';
+import history from 'base/history';
+import moment from 'moment';
 
 import * as constants from 'base/constants';
-import { requestHeaders, filterByEntity } from 'base/common';
+import { requestHeaders, filterByEntity, getFromList } from 'base/common';
 
 
 class CustomException {
@@ -12,39 +13,56 @@ class CustomException {
 }
 
 
-/*
-  We fetch all the data sources available. Each data source is like a database.
-*/
-export const fetchSources = () => {
-  return (dispatch, getState) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/source/");
-    xhr.responseType = "json";
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        dispatch({
-          type: 'SOURCE_ADD_MULTI',
-          sources: xhr.response
-        })
-        if (xhr.response.length === 1) {
-          // If there is just one source, then we make it selected source and
-          // request to fetch its tables
-          console.log(xhr.response[0][0])
-          dispatch({type: 'SELECT_SOURCE', index: xhr.response[0][0]})
-          dispatch(selectSource())
-        }
-      }
-    }
-    xhr.send();
+const parseData = (entity, searchPath, payload, dispatch, getState) => {
+  entity = constants.ENTITY_TYPE_DATA_RESULT;
+  let existing = getFromList(getState(), entity, searchPath);
+
+  if (existing.size === 0) {
+    dispatch({
+      type: constants.STORE_LIST_INIT,
+      entity: entity,
+      searchPath: searchPath
+    })
   }
+
+  dispatch({
+    type: constants.STORE_LIST_FETCH_SUCCESS,
+    payload: payload.results,
+    entity: entity,
+    searchPath: searchPath
+  });
+
+  entity = constants.ENTITY_TYPE_DATA_HEAD;
+  existing = getFromList(getState(), entity, searchPath);
+
+  if (existing.size === 0) {
+    dispatch({
+      type: constants.STORE_LIST_INIT,
+      entity: entity,
+      searchPath: searchPath
+    })
+  }
+
+  dispatch({
+    type: constants.STORE_LIST_FETCH_SUCCESS,
+    payload: payload.keys,
+    entity: entity,
+    searchPath: searchPath
+  });
 }
 
 
 const entityDescList = {
   [constants.ENTITY_TYPE_DATA_SOURCE]: {
-    itemURL: (apiRoot, id) => `${apiRoot}/source/${id}/`,
     listURL: (apiRoot) => `${apiRoot}/source/`
   },
+  [constants.ENTITY_TYPE_TABLE]: {
+    listURL: (apiRoot, searchPath) => `${apiRoot}/schema${searchPath}/`
+  },
+  [constants.ENTITY_TYPE_DATA]: {
+    listURL: (apiRoot, searchPath) => `${apiRoot}/data${searchPath}/`,
+    listProcessor: parseData
+  }
 }
 
 
@@ -53,7 +71,8 @@ export const fetchListFromAPI = (entity, searchPath = undefined) => {
 
   return (dispatch, getState) => {
     // Check if the list for this entity exists, else INIT first
-    if (getState().get('list').findIndex(filterByEntity(entity)) === -1) {
+    let existing = getFromList(getState(), entity, searchPath);
+    if (existing.size === 0) {
       dispatch({
         type: constants.STORE_LIST_INIT,
         entity: entity,
@@ -69,7 +88,11 @@ export const fetchListFromAPI = (entity, searchPath = undefined) => {
       searchPath: searchPath
     });
 
-    fetch(entityDesc.listURL(apiRoot), requestHeaders())
+    if (!entityDesc) {
+      return null;
+    }
+
+    fetch(entityDesc.listURL(apiRoot, searchPath), requestHeaders())
       .then(
         res => {
           if (res.status === 200) {
@@ -81,12 +104,16 @@ export const fetchListFromAPI = (entity, searchPath = undefined) => {
       )
       .then(
         data => {
-          dispatch({
-            type: constants.STORE_LIST_FETCH_SUCCESS,
-            payload: data,
-            entity: entity,
-            searchPath: searchPath
-          });
+          if (entityDesc.listProcessor) {
+            entityDesc.listProcessor(entity, searchPath, data, dispatch, getState);
+          } else {
+            dispatch({
+              type: constants.STORE_LIST_FETCH_SUCCESS,
+              payload: data,
+              entity: entity,
+              searchPath: searchPath
+            });
+          }
         }
       )
       .catch(
@@ -99,83 +126,5 @@ export const fetchListFromAPI = (entity, searchPath = undefined) => {
           history.push('/error/500');
         }
       )
-  }
-}
-
-
-/*
-  For each data source we can have multiple tables or views.
-*/
-export const selectSource = () => {
-  return (dispatch, getState) => {
-    var index = getState().main.selectedSource
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/schema/" + index + "/");
-    xhr.responseType = "json"
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        dispatch({
-          type: 'TABLE_ADD_MULTI',
-          source: index,
-          tables: xhr.response
-        })
-        dispatch({
-          type: 'SOURCE_ADD_TABLES',
-          source: index,
-          tables: xhr.response
-        })
-      }
-    }
-    xhr.send();
-  }
-}
-
-
-export const selectTable = () => {
-  return (dispatch, getState) => {
-    var xhr = new XMLHttpRequest()
-    var state = getState()
-    var selectedTable = state.main.selectedTable
-    var tableSettings = state.multiGrid[selectedTable] || null
-    var urlParams = []
-
-    if (tableSettings) {
-      if (tableSettings.ajaxLoading || tableSettings.hasSynced) {
-        return
-      }
-      for (var x in tableSettings.ordering) {
-        if (tableSettings.ordering[x] != null) {
-          urlParams.push('order_by=' + x + ':' + tableSettings.ordering[x])
-        }
-      }
-      if (tableSettings.limit) {
-        urlParams.push('limit=' + tableSettings.limit)
-      }
-      if (tableSettings.offset) {
-        urlParams.push('offset=' + tableSettings.offset)
-      }
-    }
-
-    if (selectedTable.indexOf("data/") !== -1) {
-      xhr.open("GET", "/api/" + selectedTable + "/?" + urlParams.join('&'))
-    }
-    xhr.responseType = "json"
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        dispatch({
-          type: 'GRID_SET_HEAD_AND_RESULT',
-          index: selectedTable,
-          heads: xhr.response.keys,
-          results: xhr.response.results,
-          count: xhr.response.count
-        })
-      }
-    }
-    dispatch({
-      type: 'GRID_SET_META',
-      meta: 'ajaxLoading',
-      value: true
-    })
-    xhr.send();
   }
 }
