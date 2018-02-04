@@ -43,9 +43,15 @@ const GridRow = ({ rowID, row, onClick, onDoubleClick }) => (<tr>
 </tr>)
 
 
+const GridHead = ({ heads, onHeadClick }) => <thead><tr>
+  { heads.map((item, i) => <th key={i} onClick={ _ => onHeadClick(i) }>{ item.label }</th>) }
+</tr></thead>;
+
+
 export class GridView extends React.PureComponent {
   componentWillMount() {
-    this.onScroll = this.onScroll.bind(this);
+    // this.onScroll = this.onScroll.bind(this);
+    this.props.onMount();
   }
 
   onScroll() {
@@ -71,10 +77,8 @@ export class GridView extends React.PureComponent {
 
       return (<div className="grid-cont">
         { heads.length ? <GridDash cell={ cell } limit={ limit } onLimitChange={onLimitChange} /> : null }
-        <table className="grid" id="grid-table" ref={(c) => this._table = c}>
-          <thead><tr>
-            { heads.map((item, i) => <th key={i} onClick={ _ => onHeadClick(item) }>{ item }</th>) }
-          </tr></thead>
+        <table className="table table-striped table-bordered table-sm" ref={ (c) => this._table = c }>
+          <GridHead heads={ heads } onHeadClick={ onHeadClick } />
           <tbody>{ results.map((row, i) => <GridRow rowID={i} row={row} key={i} onClick={onCellClick} onDoubleClick={onRowDoubleClick} />) }</tbody>
         </table>
         {/* heads.length ? <GridPagination count={count} limit={limit} offset={offset} onPageChange={onPageChange} /> : null */}
