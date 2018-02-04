@@ -1,0 +1,7 @@
+[settings]
+SERVER_HOST=127.0.0.1
+SERVER_PORT=45454
+
+[databases]
+DB=postgresql+psycopg2://postgres@localhost/sample_database
+DB=postgresql+psycopg2://postgres@localhost/two_database

@@ -1,0 +1,281 @@
+$primary-text-color: #454545
+$navbar-border-color: #dedede
+$grid-border-color: #dedede
+
+
+body
+  font-family: 'Lato', sans-serif
+  font-size: 14px
+  color: $primary-text-color
+  background: #fff
+  margin: 0
+  padding: 0
+
+a
+  text-decoration: none
+  color: #165eb9
+
+
+#top-nav
+  width: 100%
+  height: 32px
+  border-bottom: 1px solid $navbar-border-color
+  position: relative
+
+  ul.menu-list
+    list-style: none
+    margin: 0
+    padding: 0
+    width: auto
+    position: relative
+    float: left
+    display: inline-block
+
+    &.menu-right
+      float: right
+
+    li
+      float: left
+      display: inline-block
+      width: auto
+
+      a
+        display: block
+        color: #333
+        line-height: 32px
+        font-family: 'Raleway', sans-serif
+        font-weight: 600
+        padding: 0 16px
+        cursor: default
+
+        &:hover
+          background-color: #eee
+
+      &.active
+        background-color: #4caf50
+
+        span
+          display: block
+          color: #FFF
+          line-height: 32px
+          font-family: 'Raleway', sans-serif
+          font-weight: 600
+          padding: 0 16px
+          cursor: default
+
+#side-nav
+  display: none
+  position: absolute
+  border: 1px solid $navbar-border-color
+  border-top: none
+  z-index: 2
+  padding: 0
+  margin: 0
+  background-color: #fff
+  min-width: 180px
+  min-height: 200px
+  box-shadow: 1px 1px 2px #cecece
+
+  &.visible
+    display: block
+
+  .form-el-cont
+    margin: 0 0 8px
+
+    .label-cont
+      margin: 0 0 2px
+
+      label
+        background: #EFEFEF
+        color: #9A9A9A
+        text-transform: capitalize
+        font-family: 'Raleway', sans-serif
+
+    .el-cont
+      width: 100%
+      margin: 2px 0 0
+
+  .head
+    background: #EFEFEF
+    color: #9A9A9A
+    padding: 12px 6px 6px
+    font-family: 'Raleway', sans-serif
+    cursor: default
+
+  ul.list
+    margin: 0
+    padding: 0
+    width: 100%
+    display: block
+    float: left
+
+    li
+      width: 100%
+      clear: both
+      display: block
+      line-height: 20px
+      cursor: pointer
+
+      &:hover
+        background-color: #efefef
+
+      span
+        font-family: 'Lato', sans-serif
+        font-weight: 400
+        font-size: 14px
+        margin: 0 0 0 4px
+        display: block
+
+        span.circle
+          width: 8px
+          height: 8px
+          background-color: #4caf50
+          border-radius: 50%
+          margin: 0 4px 0 0
+          display: inline-block
+
+      a
+        font-family: 'Lato', sans-serif
+        font-weight: 400
+        font-size: 14px
+        margin: 0 0 0 16px
+        display: block
+
+
+table.grid
+  border-collapse: collapse
+  width: 100%
+
+  thead
+    tr
+      border-top: 1px solid $grid-border-color
+      border-bottom: 1px solid $grid-border-color
+
+    th
+      font-family: 'Raleway', sans-serif
+      font-weight: 600
+      text-align: left
+      line-height: 24px
+      padding: 0 0 0 4px
+      border-right: 1px solid $grid-border-color
+      background-color: #efefef
+      border-top: 2px solid #efefef
+      border-bottom: 2px solid #efefef
+      cursor: pointer
+
+      &.asc
+        border-bottom: 2px solid #ff5252
+
+      &.desc
+        border-top: 2px solid #ff5252
+
+  tbody
+    tr
+      line-height: 18px
+      border-bottom: 1px solid $grid-border-color
+      font-family: 'Lato', sans-serif
+
+      td
+        border-right: 1px solid $grid-border-color
+        cursor: default
+
+        &:last-child
+          border-right: 0
+
+      &:hover
+        background-color: #efefef
+
+
+#query-box
+  width: 100%
+  position: absolute
+  z-index: 1
+
+  .query-textbox
+    width: 90%
+    margin: 0 auto
+
+    textarea
+      width: 100%
+      max-width: 100%
+
+
+.form-el-cont
+  .label-cont
+    label
+      padding: 12px 6px 6px
+      display: block
+
+  .el-cont
+    .form-input
+      display: block
+      width: 100%
+
+#grid-dash
+  position: relative
+  height: 24px
+  line-height: 24px
+
+  .cell-data
+    padding: 0 0 0 12px
+    font-family: "Lato", sans-serif
+    line-height: 24px
+    border-bottom: 1px solid $grid-border-color
+    height: 24px
+    overflow: hidden
+
+  .grid-limit
+    position: absolute
+    background: #efefef
+    padding: 0 6px
+    right: 0
+    top: 0
+    z-index: 2
+
+#grid-pagination
+  position: fixed
+  bottom: 60px
+  right: 120px
+
+  ul
+    list-style: none
+    margin: 0
+    padding: 0
+
+    li
+      float: left
+      display: inline-block
+      border: 1px solid #dedede
+      background: #efefef
+      padding: 4px 10px
+      margin: 0 1px
+      border-radius: 6px
+      cursor: pointer
+
+      &.active
+        background: #4caf50
+        color: #fff
+        border-color: #4caf50
+
+      &:hover
+        background: #4caf50
+        color: #fff
+        border-color: #4caf50
+
+.detail-view
+  padding: 16px
+  z-index: 2
+  position: fixed
+  top: 100px
+  left: 200px
+  background: #EFEFEF
+  box-shadow: 1px 1px 2px #cecece
+  border-radius: 6px
+
+  .col
+    label
+      color: #9A9A9A
+      display: block
+
+    input
+      padding: 4px
