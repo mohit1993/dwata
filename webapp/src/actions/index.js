@@ -13,6 +13,14 @@ class CustomException {
 }
 
 
+const iterDataHeads = x => {
+  return {
+    name: x,
+    label: x,
+    _isOn: !(x.startsWith('pass') || x.endsWith('_code') || x.endsWith('_token') || x.startsWith('is_'))  // Is this column visible
+  }
+}
+
 const parseData = (entity, searchPath, payload, dispatch, getState) => {
   entity = constants.ENTITY_TYPE_DATA_RESULT;
   let existing = getFromList(getState(), entity, searchPath);
@@ -45,7 +53,7 @@ const parseData = (entity, searchPath, payload, dispatch, getState) => {
 
   dispatch({
     type: constants.STORE_LIST_FETCH_SUCCESS,
-    payload: payload.keys,
+    payload: payload.keys.map(iterDataHeads),
     entity: entity,
     searchPath: searchPath
   });

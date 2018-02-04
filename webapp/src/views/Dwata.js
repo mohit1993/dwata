@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import logo from 'logo.svg';
 import 'App.css';
 import TopNav from 'views/TopNav';
-import { Tables, Sources } from 'containers/SideNav';
+import { Tables, Sources } from 'containers/Selector';
 import { Grid } from 'containers/Grid';
 // import DetailView from 'containers/DetailView';
 

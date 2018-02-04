@@ -44,9 +44,9 @@ const listEntry = (state = defaultListEntry, action) => {
         _lastFetchedAt: moment.utc()
       });
 
-    case constants.STORE_LIST_UPDATE:
+    case constants.STORE_LIST_MERGE:
       // Assumes an Immutable.List in action.payload
-      return state;
+      return state.get('data').merge(action.payload);
 
     case constants.STORE_LIST_SELECT_ITEM:
       return state.get('data').map(x => x.id === action.id ? x.set('_isSelected', true) : x)
@@ -79,9 +79,9 @@ export default (state = Immutable.List([]), action) => {
       // Assumes a plain JS list in action.payload, probably from AJAX response
       return state.update(findIndex(state, action), x => listEntry(x, action));
 
-    case constants.STORE_LIST_UPDATE:
+    case constants.STORE_LIST_MERGE:
       // Assumes an Immutable.List in action.payload
-      return state;
+      return state.update(findIndex(state, action), x => listEntry(x, action));
 
     case constants.STORE_LIST_SELECT_ITEM:
       return state.update(findIndex(state, action), x => listEntry(x, action));

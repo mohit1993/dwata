@@ -6,7 +6,7 @@ import history from 'base/history';
 import * as constants from 'base/constants';
 import { selectedInList, getFromList } from 'base/common';
 import { fetchListFromAPI } from 'actions';
-import { TablesView, SourcesView } from 'views/SideNav';
+import { TablesView, SourcesView } from 'views/Selector';
 
 
 export const Tables = withRouter(connect(
@@ -31,7 +31,6 @@ export const Tables = withRouter(connect(
         //   entity: constants.ENTITY_TYPE_TABLE,
         //   filterBy: x => x.get(0) === nav[0]
         // });
-        dispatch(fetchListFromAPI(constants.ENTITY_TYPE_DATA, `/${db}/${nav[0]}`));
         history.push(`/records/${db}/${nav[0]}/`);
       }
     }
@@ -57,7 +56,6 @@ export const Sources = connect(
         //   entity: constants.ENTITY_TYPE_DATA_SOURCE,
         //   filterBy: x => x.get(0) === nav[0]
         // });
-        dispatch(fetchListFromAPI(constants.ENTITY_TYPE_TABLE, `/${nav[0]}`));
         history.push(`/source/${nav[0]}/`);
       }
     }

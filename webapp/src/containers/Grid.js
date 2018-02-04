@@ -63,6 +63,10 @@ import { GridView } from 'views/Grid';
 //   mapDispatchToProps
 // )(GridView);
 
+const visibleResults = (results, visibleIndexes) => {
+  return results.map(row => row.filter((_, i) => visibleIndexes.indexOf(i) !== -1));
+}
+
 
 export const Grid = withRouter(connect(
   (state, ownProps) => {
@@ -70,18 +74,23 @@ export const Grid = withRouter(connect(
     let schema = ownProps.match.isExact === true ? ownProps.match.params.schema : null;
     let heads = db && schema ? getFromList(state, constants.ENTITY_TYPE_DATA_HEAD, `/${db}/${schema}`) : Immutable.Map({});
     let results = db && schema ? getFromList(state, constants.ENTITY_TYPE_DATA_RESULT, `/${db}/${schema}`) : Immutable.Map({});
+    heads = heads.get('data', Immutable.List([]))
+
+    // From the heads we can find out which indexes in heads or result records are visible
+    let visibleIndexes = heads.map((x, i) => x.get('_isOn', false) === true ? i : null).filter(x => x !== undefined);
 
     return {
-      heads: heads.get('data', Immutable.List([])),
-      results: results.get('data', Immutable.List([]))
+      heads: heads.filter((_, i) => visibleIndexes.indexOf(i) !== -1),
+      results: visibleResults(results.get('data', Immutable.List([])), visibleIndexes)
     }
   },
 
   (dispatch, ownProps) => {
     let db = ownProps.match.isExact === true ? ownProps.match.params.db : null;
+    let schema = ownProps.match.isExact === true ? ownProps.match.params.schema : null;
 
     return {
-      onMount: _ => { db ? dispatch(fetchListFromAPI(constants.ENTITY_TYPE_TABLE, `/${db}`)) : null },
+      onMount: _ => { db ? dispatch(fetchListFromAPI(constants.ENTITY_TYPE_DATA, `/${db}/${schema}`)) : null },
 
       onHeadClick: index => {
         dispatch({type: 'GRID_CLICK_HEAD', head: index})
