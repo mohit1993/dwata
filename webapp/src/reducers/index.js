@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux-immutable';
 
-import items from './items';
+import item from './item';
 import list from './list';
 
 export default combineReducers({
-  items,
+  item,
   list
 });

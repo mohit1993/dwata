@@ -1,6 +1,8 @@
 import Immutable from 'immutable';
 
 import * as constants from './constants';
+import { defaultItemEntry } from 'reducers/item';
+import { defaultListEntry } from 'reducers/list';
 
 
 // Only filter by entity, not searchPath
@@ -16,9 +18,29 @@ export const filterByEntityAndSearchPath = (entity, searchPath) => item =>
 export const getFromList = (state, entity, searchPath) => {
   let list = state.get('list');
   if (searchPath === undefined) {
-    return list.find(filterByEntity(entity), undefined, Immutable.Map({}));
+    return list.find(filterByEntity(entity), undefined, defaultListEntry.merge({
+      entity
+    }));
   } else {
-    return list.find(filterByEntityAndSearchPath(entity, searchPath), undefined, Immutable.Map({}));
+    return list.find(filterByEntityAndSearchPath(entity, searchPath), undefined, defaultListEntry.merge({
+      entity,
+      searchPath
+    }));
+  }
+}
+
+
+export const getFromItem = (state, entity, searchPath) => {
+  let item = state.get('item');
+  if (searchPath === undefined) {
+    return item.find(filterByEntity(entity), undefined, defaultItemEntry.merge({
+      entity
+    }));
+  } else {
+    return item.find(filterByEntityAndSearchPath(entity, searchPath), undefined, defaultItemEntry.merge({
+      entity,
+      searchPath
+    }));
   }
 }
 

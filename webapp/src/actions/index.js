@@ -1,8 +1,8 @@
 import history from 'base/history';
-import moment from 'moment';
+import Immutable from 'immutable';
 
 import * as constants from 'base/constants';
-import { requestHeaders, filterByEntity, getFromList } from 'base/common';
+import { requestHeaders, filterByEntity, filterByEntityAndSearchPath } from 'base/common';
 
 
 class CustomException {
@@ -21,9 +21,30 @@ const iterDataHeads = x => {
   }
 }
 
+
+const getFromListNoDefault = (state, entity, searchPath) => {
+  // In the common/getFromList we return default Immutable.Map if data is not found
+  // Here we return a blank Map
+  if (searchPath === undefined) {
+    return state.get('list').find(filterByEntity(entity), undefined, Immutable.Map({}));
+  } else {
+    return state.get('list').find(filterByEntityAndSearchPath(entity, searchPath), undefined, Immutable.Map({}));
+  }
+}
+
+
+export const getFromItemNoDefault = (state, entity, searchPath) => {
+  if (searchPath === undefined) {
+    return state.get('item').find(filterByEntity(entity), undefined, Immutable.Map({}));
+  } else {
+    return state.get('item').find(filterByEntityAndSearchPath(entity, searchPath), undefined, Immutable.Map({}));
+  }
+}
+
+
 const parseData = (entity, searchPath, payload, dispatch, getState) => {
   entity = constants.ENTITY_TYPE_DATA_RESULT;
-  let existing = getFromList(getState(), entity, searchPath);
+  let existing = getFromListNoDefault(getState(), entity, searchPath);
 
   if (existing.size === 0) {
     dispatch({
@@ -41,7 +62,7 @@ const parseData = (entity, searchPath, payload, dispatch, getState) => {
   });
 
   entity = constants.ENTITY_TYPE_DATA_HEAD;
-  existing = getFromList(getState(), entity, searchPath);
+  existing = getFromListNoDefault(getState(), entity, searchPath);
 
   if (existing.size === 0) {
     dispatch({
@@ -79,7 +100,7 @@ export const fetchListFromAPI = (entity, searchPath = undefined) => {
 
   return (dispatch, getState) => {
     // Check if the list for this entity exists, else INIT first
-    let existing = getFromList(getState(), entity, searchPath);
+    let existing = getFromListNoDefault(getState(), entity, searchPath);
     if (existing.size === 0) {
       dispatch({
         type: constants.STORE_LIST_INIT,

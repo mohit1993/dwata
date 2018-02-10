@@ -1,6 +1,5 @@
 import React from 'react';
 
-import defaultContainer from 'base/container';
 import * as constants from 'base/constants';
 
 

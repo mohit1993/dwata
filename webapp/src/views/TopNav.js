@@ -1,32 +1,39 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Immutable from 'immutable';
 
-import NavBarView from './NavBar';
 import * as constants from 'base/constants';
-import defaultContainer from 'base/container';
+import { LeftNavContainer, RightNavContainer } from 'containers/TopNav';
 
 
-const LeftNav = defaultContainer(({ dataList, onClick }) => {
-    dataList = dataList.get('data', Immutable.List([])).toJS();
-
-    return <ul className="navbar-nav mr-auto">
-      { dataList.map((nav, index) => <NavBarView key={ `tn-left-${index}` } {...nav} onClick={ (e) => { e.preventDefault(); onClick(nav.index) } } />) }
-    </ul>
-  },
-  { entity: constants.ENTITY_TYPE_TOPNAV_LEFT, mode: constants.CONTAINER_MODE_LIST }
-);
+const NavItem = ({ label, link, meta, active }) => <li className={ active ? "menu-item active": "menu-item"}>
+  { active ? <span><span className="circle"></span>
+    { label } { meta ? <span className="meta">( { meta } )</span> : null }
+  </span> : link !== undefined ? <Link to={ link } className="menu-link">
+    { label } { meta ? <span className="meta">({meta})</span> : null }
+  </Link> : null }
+</li>
 
 
-const RightNav = defaultContainer(({ dataList, onClick }) => {
-    dataList = dataList.get('data', Immutable.List([])).toJS();
+const LeftNav = ({ dataList }) => {
+  dataList = dataList.get('data').toJS();
 
-    return <ul className="navbar-nav mr-auto">
-      { dataList.map((nav, index) => <NavBarView key={ `tn-right-${index}` } {...nav} onClick={(e) => { e.preventDefault(); onClick(nav.index) }} />) }
-    </ul>
-  },
-  { entity: constants.ENTITY_TYPE_TOPNAV_RIGHT, mode: constants.CONTAINER_MODE_LIST }
-);
+  return <ul className="navbar-nav mr-auto">
+    { dataList.map((nav, index) => <NavItem key={ `tn-left-${index}` } {...nav} />) }
+  </ul>
+}
+
+const ConnectedLeftNav = LeftNavContainer(LeftNav);
+
+
+const RightNav = ({ dataList }) => {
+  dataList = dataList.get('data').toJS();
+
+  return <ul className="navbar-nav mr-auto">
+    { dataList.map((nav, index) => <NavItem key={ `tn-right-${index}` } {...nav} />) }
+  </ul>
+}
+
+const ConnectedRightNav = RightNavContainer(RightNav);
 
 
 export default ({}) => <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -36,8 +43,8 @@ export default ({}) => <nav className="navbar navbar-expand-lg navbar-light bg-l
   </button>
 
   <div className="collapse navbar-collapse" id="navbarSupportedContent">
-    <LeftNav />
-    <RightNav />
+    <ConnectedLeftNav />
+    <ConnectedRightNav />
 
     <form className="form-inline my-2 my-lg-0">
       <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />

@@ -5,7 +5,7 @@ import * as constants from 'base/constants';
 import { filterByEntity, filterByEntityAndSearchPath } from 'base/common';
 
 
-const defaultListEntry = Immutable.Map({
+export const defaultListEntry = Immutable.Map({
   entity: undefined,
   searchPath: undefined,
 
@@ -13,7 +13,7 @@ const defaultListEntry = Immutable.Map({
 
   _isFetching: false,
   _isReady: false,
-  _lastFetchedAt: undefined
+  _lastFetchedAt: null
 });
 
 
@@ -25,7 +25,8 @@ const listEntry = (state = defaultListEntry, action) => {
         entity: action.entity,
         searchPath: action.searchPath ? action.searchPath : undefined,
         data: action.payload ? action.payload : Immutable.List([]),
-        _isReady: true
+        _isReady: true,
+        _lastFetchedAt: moment.utc()
       });
 
     case constants.STORE_LIST_FETCH_INIT:
@@ -36,8 +37,9 @@ const listEntry = (state = defaultListEntry, action) => {
 
     case constants.STORE_LIST_FETCH_SUCCESS:
       // Assumes a plain JS list in action.payload, probably from AJAX response
+      const data = fromJS(action.payload)
       return state.merge({
-        data: fromJS(action.payload),
+        data: data,
 
         _isFetching: false,
         _isReady: true,
@@ -67,6 +69,10 @@ const findIndex = (state, action) => {
 
 
 export default (state = Immutable.List([]), action) => {
+  if (action.entity === undefined) {
+    return state;
+  }
+
   switch (action.type) {
     case constants.STORE_LIST_INIT:
       // Assumes an Immutable.List in action.payload
