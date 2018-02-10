@@ -6025,3 +6025,19 @@ a.text-dark:hover, a.text-dark:focus {
   .table-bordered th,
   .table-bordered td {
     border: 1px solid #ddd !important; } }
+
+.sc-tbl-item .list-group-item {
+  padding: 6px 10px;
+  font-size: 85%;
+  display: flex;
+  flex-direction: row; }
+  .sc-tbl-item .list-group-item span {
+    display: block;
+    float: left;
+    flex-basis: 0;
+    flex-grow: 1; }
+    .sc-tbl-item .list-group-item span.cl-type {
+      color: #999; }
+
+.grid-cont table.table {
+  font-size: 85%; }

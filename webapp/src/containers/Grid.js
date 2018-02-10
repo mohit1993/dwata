@@ -7,6 +7,7 @@ import * as constants from 'base/constants';
 import { selectedInList, getFromList } from 'base/common';
 import { fetchListFromAPI } from 'actions';
 import { GridView } from 'views/Grid';
+import { defaultListEntry } from 'reducers/list';
 
 
 // const mapStateToProps = (state) => {
@@ -72,8 +73,9 @@ export const Grid = withRouter(connect(
   (state, ownProps) => {
     let db = ownProps.match.isExact === true ? ownProps.match.params.db : null;
     let schema = ownProps.match.isExact === true ? ownProps.match.params.schema : null;
-    let heads = db && schema ? getFromList(state, constants.ENTITY_TYPE_DATA_HEAD, `/${db}/${schema}`) : Immutable.Map({});
-    let results = db && schema ? getFromList(state, constants.ENTITY_TYPE_DATA_RESULT, `/${db}/${schema}`) : Immutable.Map({});
+
+    let heads = db && schema ? getFromList(state, constants.ENTITY_TYPE_DATA_HEAD, `/${db}/${schema}`) : defaultListEntry;
+    let results = db && schema ? getFromList(state, constants.ENTITY_TYPE_DATA_RESULT, `/${db}/${schema}`) : defaultListEntry;
     heads = heads.get('data', Immutable.List([]))
 
     // From the heads we can find out which indexes in heads or result records are visible
@@ -90,7 +92,25 @@ export const Grid = withRouter(connect(
     let schema = ownProps.match.isExact === true ? ownProps.match.params.schema : null;
 
     return {
-      onMount: _ => { db ? dispatch(fetchListFromAPI(constants.ENTITY_TYPE_DATA, `/${db}/${schema}`)) : null },
+      onMount: _ => {
+        db && schema ? dispatch(fetchListFromAPI(constants.ENTITY_TYPE_DATA, `/${db}/${schema}`)) : null;
+        db && schema ? dispatch({
+          type: constants.STORE_ITEM_INIT,
+          entity: constants.ENTITY_TYPE_GRID,
+          payload: Immutable.Map({
+            db,
+            schema,
+            searchPath: `/${db}/${schema}`
+          })
+        }) : null;
+      },
+
+      onUnmount: _ => {
+        dispatch({
+          type: constants.STORE_ITEM_DESTROY,
+          entity: constants.ENTITY_TYPE_GRID
+        });
+      },
 
       onHeadClick: index => {
         dispatch({type: 'GRID_CLICK_HEAD', head: index})

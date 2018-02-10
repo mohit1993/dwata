@@ -70,6 +70,9 @@ export default (state = Immutable.List([]), action) => {
     case constants.STORE_ITEM_FETCH_ERROR:
       return state.update(findIndex(state, action), x => itemEntry(x, action));
 
+    case constants.STORE_ITEM_DESTROY:
+      return state.delete(findIndex(state, action))
+
     default:
       return state
   }

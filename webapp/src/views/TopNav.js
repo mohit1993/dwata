@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faCheckCircleOff from '@fortawesome/fontawesome-free-regular/faCheckCircle';
+import faCheckCircleOn from '@fortawesome/fontawesome-free-solid/faCheckCircle';
 
 import * as constants from 'base/constants';
 import { LeftNavContainer, RightNavContainer } from 'containers/TopNav';
@@ -14,7 +17,7 @@ const NavItem = ({ label, link, meta, active }) => <li className={ active ? "men
 </li>
 
 
-const LeftNav = ({ dataList }) => {
+const LeftNav = ({ dataList, grid }) => {
   dataList = dataList.get('data').toJS();
 
   return <ul className="navbar-nav mr-auto">
@@ -25,11 +28,24 @@ const LeftNav = ({ dataList }) => {
 const ConnectedLeftNav = LeftNavContainer(LeftNav);
 
 
-const RightNav = ({ dataList }) => {
+const RightNav = ({ dataList, grid, columns }) => {
   dataList = dataList.get('data').toJS();
+  grid = grid.get('data').toJS();
+  columns = columns.get('data').toJS();
 
-  return <ul className="navbar-nav mr-auto">
+  return <ul className="navbar-nav">
     { dataList.map((nav, index) => <NavItem key={ `tn-right-${index}` } {...nav} />) }
+    { columns.length > 0 ? <li className="nav-item dropdown">
+      <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       Columns
+      </a>
+      <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+        { columns.map(column => <a className="dropdown-item" href="#">
+          { column._isOn === true ? <FontAwesomeIcon icon={ faCheckCircleOn } /> : <FontAwesomeIcon icon={ faCheckCircleOff } /> }
+        &nbsp;{ column.name }</a>) }
+      </div>
+    </li> : null }
   </ul>
 }
 

@@ -53,6 +53,10 @@ export class GridView extends React.PureComponent {
     this.props.onMount();
   }
 
+  componentWillUnmount() {
+    this.props.onUnmount();
+  }
+
   onScroll() {
     // In this scroll handler, we call our `onScroll` that was passed in to our Grid component.
     // Remember the `onScroll` method of this `Grid` class is different from the method that was passed to
@@ -63,24 +67,22 @@ export class GridView extends React.PureComponent {
 
   componentDidUpdate() {
     // When this component has mounted we set a scroll handler
-    window.addEventListener('scroll', this.onScroll)
+    // window.addEventListener('scroll', this.onScroll)
   }
 
   render() {
     if (this.props) {
-      let { heads, results, onHeadClick, cell, onCellClick, count, limit,
-        offset, onLimitChange, onPageChange, onScroll, onRowDoubleClick } = this.props;
+      let { heads, results, onHeadClick, onCellClick, count,
+        offset, onPageChange, onScroll, onRowDoubleClick } = this.props;
 
       heads = heads.toJS();
       results = results.toJS();
 
       return (<div className="grid-cont">
-        { heads.length ? <GridDash cell={ cell } limit={ limit } onLimitChange={onLimitChange} /> : null }
         <table className="table table-striped table-bordered table-sm" ref={ (c) => this._table = c }>
           <GridHead heads={ heads } onHeadClick={ onHeadClick } />
           <tbody>{ results.map((row, i) => <GridRow rowID={i} row={row} key={i} onClick={onCellClick} onDoubleClick={onRowDoubleClick} />) }</tbody>
         </table>
-        {/* heads.length ? <GridPagination count={count} limit={limit} offset={offset} onPageChange={onPageChange} /> : null */}
       </div>);
     } else {
       return <div className="grid-cont"></div>;

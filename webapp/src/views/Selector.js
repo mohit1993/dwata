@@ -6,7 +6,10 @@ const TableItem = ({ t, db }) => <div className="card sc-tbl-item">
   <div className="card-header"><Link to={ `/records/${db}/${t[0]}` }>{ t[0] }</Link></div>
 
   <ul className="list-group list-group-flush">
-    { t[1].map((col, i) => <li className="list-group-item" key={ `col-${i}` }>{ col.name } ({ col.type })</li>) }
+    { t[1].map((col, i) => <li className="list-group-item" key={ `col-${i}` }>
+      <span className="cl-name">{ col.name }</span>
+      <span className="cl-type">{ col.type }</span>
+    </li>) }
   </ul>
 </div>;
 

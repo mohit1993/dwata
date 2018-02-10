@@ -13,15 +13,6 @@ class CustomException {
 }
 
 
-const iterDataHeads = x => {
-  return {
-    name: x,
-    label: x,
-    _isOn: !(x.startsWith('pass') || x.endsWith('_code') || x.endsWith('_token') || x.startsWith('is_'))  // Is this column visible
-  }
-}
-
-
 const getFromListNoDefault = (state, entity, searchPath) => {
   // In the common/getFromList we return default Immutable.Map if data is not found
   // Here we return a blank Map
@@ -42,7 +33,17 @@ export const getFromItemNoDefault = (state, entity, searchPath) => {
 }
 
 
-const parseData = (entity, searchPath, payload, dispatch, getState) => {
+
+const iterDataHeads = x => {
+  return {
+    name: x,
+    label: x,
+    _isOn: !(x.startsWith('pass') || x.endsWith('_code') || x.endsWith('_token') || x.startsWith('is_'))  // Is this column visible
+  }
+}
+
+
+const processResults = (entity, searchPath, payload, dispatch, getState) => {
   entity = constants.ENTITY_TYPE_DATA_RESULT;
   let existing = getFromListNoDefault(getState(), entity, searchPath);
 
@@ -90,7 +91,7 @@ const entityDescList = {
   },
   [constants.ENTITY_TYPE_DATA]: {
     listURL: (apiRoot, searchPath) => `${apiRoot}/data${searchPath}/`,
-    listProcessor: parseData
+    listProcessor: processResults
   }
 }
 
