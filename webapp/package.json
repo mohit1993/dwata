@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^4.0.0",
+    "font-awesome": "^4.7.0",
     "immutable": "^3.8.2",
     "moment": "^2.20.1",
     "react": "^16.2.0",
@@ -17,10 +19,22 @@
     "save": "^2.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start-js": "react-scripts start",
+    "build-js": "react-scripts build",
+
+    "start": "npm-run-all -p watch-css start-js",
+    "build": "npm-run-all build-css build-js",
+
+    "build-css": "node-sass-chokidar src/styles/scss/ -o src/styles/css/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/styles/scss/ -o src/styles/css/ --watch --recursive",
+
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://127.0.0.1:45454"
+  "proxy": "http://127.0.0.1:45454",
+  "devDependencies": {
+    "jest": "^22.2.2",
+    "node-sass-chokidar": "0.0.3",
+    "npm-run-all": "^4.1.2"
+  }
 }
